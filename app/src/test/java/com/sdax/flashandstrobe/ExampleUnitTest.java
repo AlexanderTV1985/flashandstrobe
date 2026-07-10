@@ -1,4 +1,4 @@
-package com.dev.flashandstrobe;
+package com.sdax.flashandstrobe;
 
 import org.junit.Test;
 

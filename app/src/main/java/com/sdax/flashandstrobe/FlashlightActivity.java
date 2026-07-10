@@ -1,4 +1,4 @@
-package com.dev.flashandstrobe;
+package com.sdax.flashandstrobe;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -6,7 +6,6 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;

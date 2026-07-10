@@ -1,4 +1,4 @@
-package com.dev.flashandstrobe;
+package com.sdax.flashandstrobe;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.dev.flashandstrobe", appContext.getPackageName());
+        assertEquals("com.sdax.flashandstrobe", appContext.getPackageName());
     }
 }

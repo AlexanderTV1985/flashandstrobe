@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dev.flashandstrobe">
+    package="com.sdax.flashandstrobe">
 
     <!-- Разрешения для фонарика -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,7 +17,7 @@
 
         <!-- Главная активность -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.sdax.flashandstrobe.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,19 +28,19 @@
 
         <!-- Заготовки для остальных экранов (пока пустые) -->
         <activity
-            android:name=".FlashlightActivity"
+            android:name="com.sdax.flashandstrobe.FlashlightActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".StrobeActivity"
+            android:name="com.sdax.flashandstrobe.StrobeActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".SosActivity"
+            android:name="com.sdax.flashandstrobe.SosActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".FlickerActivity"
+            android:name="com.sdax.flashandstrobe.FlickerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>

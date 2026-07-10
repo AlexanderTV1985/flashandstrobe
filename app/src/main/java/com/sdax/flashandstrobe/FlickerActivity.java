@@ -1,3 +1,3 @@
-package com.dev.flashandstrobe;
+package com.sdax.flashandstrobe;
 import androidx.appcompat.app.AppCompatActivity;
 public class FlickerActivity extends AppCompatActivity {}
