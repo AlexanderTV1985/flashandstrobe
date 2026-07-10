@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sdax.flashandstrobe">
 
-    <!-- Разрешения для фонарика -->
+    <!-- Разрешения для фонарика и всех режимов со вспышкой -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Указываем, что камера желательна, но не обязательна (чтобы приложение ставилось и на планшеты без вспышки) -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -15,34 +16,43 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <!-- Главная активность -->
+        <!-- Главная активность (точка входа) -->
         <activity
             android:name="com.sdax.flashandstrobe.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Заготовки для остальных экранов (пока пустые) -->
+        <!-- Экран фонарика -->
         <activity
             android:name="com.sdax.flashandstrobe.FlashlightActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <!-- Экран стробоскопа -->
         <activity
             android:name="com.sdax.flashandstrobe.StrobeActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <!-- Экран SOS -->
         <activity
             android:name="com.sdax.flashandstrobe.SosActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <!-- Экран Flicker (космический шум) -->
         <activity
             android:name="com.sdax.flashandstrobe.FlickerActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
     </application>
-
 </manifest>
