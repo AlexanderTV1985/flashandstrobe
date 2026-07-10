@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Готов к работе"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,14 +25,14 @@
         android:text="ВКЛЮЧИТЬ СТРОБОСКОП"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        android:backgroundTint="#FFEB3B"
+        android:textColor="@color/strobe_text"
+        android:backgroundTint="@color/strobe_btn"
         app:layout_constraintTop_toBottomOf="@id/tvStatusStrobe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"/>
 
-    <!-- Ползунок для регулировки частоты (опционально, но круто) -->
+    <!-- Ползунок для регулировки частоты -->
     <SeekBar
         android:id="@+id/seekFrequency"
         android:layout_width="0dp"
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Частота: 10 Гц"
-        android:textColor="#AAAAAA"
+        android:textColor="@color/text_hint"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/seekFrequency"
         app:layout_constraintStart_toStartOf="parent"

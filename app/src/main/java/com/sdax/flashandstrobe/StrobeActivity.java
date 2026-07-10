@@ -125,7 +125,6 @@ public class StrobeActivity extends AppCompatActivity {
             startStrobeLoop();
         } else {
             btnToggleStrobe.setText("ВКЛЮЧИТЬ СТРОБОСКОП");
-            // Если у тебя нет цветов в colors.xml — закомментируй строку ниже
             btnToggleStrobe.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
 
             tvStatusStrobe.setText("Готов к работе");

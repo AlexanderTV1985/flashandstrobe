@@ -3,29 +3,45 @@ package com.sdax.flashandstrobe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Button btnFlashlight;
+    private Button btnStrobe;
+    private Button btnSos;
+    private Button btnFlicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnFlashlight = findViewById(R.id.btnFlashlight);
-        Button btnStrobe = findViewById(R.id.btnStrobe);
-        Button btnSos = findViewById(R.id.btnSos);
-        Button btnFlicker = findViewById(R.id.btnFlicker);
+        btnFlashlight = findViewById(R.id.btnFlashlight);
+        btnStrobe = findViewById(R.id.btnStrobe);
+        btnSos = findViewById(R.id.btnSos);
+        btnFlicker = findViewById(R.id.btnFlicker);
 
-        btnFlashlight.setOnClickListener(v -> openActivity(FlashlightActivity.class));
-        btnStrobe.setOnClickListener(v -> openActivity(StrobeActivity.class));
-        btnSos.setOnClickListener(v -> openActivity(SosActivity.class));
-        btnFlicker.setOnClickListener(v -> openActivity(FlickerActivity.class));
-    }
+        btnFlashlight.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, FlashlightActivity.class));
+        });
 
-    private void openActivity(Class<?> activityClass) {
-        Intent intent = new Intent(this, activityClass);
-        startActivity(intent);
+        btnStrobe.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, StrobeActivity.class));
+        });
+
+        btnSos.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(MainActivity.this, SosActivity.class));
+            } catch (Exception e) {
+                Toast.makeText(this, "Режим SOS ещё в разработке", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnFlicker.setOnClickListener(v -> {
+            Toast.makeText(this, "Flicker: режим в разработке (адаптивное мигание)", Toast.LENGTH_LONG).show();
+        });
     }
 }

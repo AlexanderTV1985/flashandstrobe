@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Фонарик -->
     <color name="flash_on">#FFFF5722</color>      <!-- Оранжевый: фонарик включён -->
     <color name="flash_off">#FFFFC107</color>     <!-- Жёлтый: фонарик выключен -->
+
+    <!-- Общие -->
     <color name="background_dark">#2B2B2B</color>  <!-- Тёмный фон экрана -->
+    <color name="text_primary">#FFFFFF</color>    <!-- Основной белый текст -->
+    <color name="text_hint">#AAAAAA</color>       <!-- Вспомогательный серый текст -->
+
+    <!-- Стробоскоп -->
+    <color name="strobe_btn">#FFEB3B</color>       <!-- Яркий жёлтый для кнопки стробоскопа -->
+    <color name="strobe_text">#000000</color>    <!-- Чёрный текст на кнопке стробоскопа (для контраста) -->
+
+    <!-- SOS -->
+    <color name="sos_btn">#FF5722</color>         <!-- Оранжево‑красный для кнопки SOS -->
+    <color name="sos_text">#FFFFFF</color>       <!-- Белый текст на кнопке SOS -->
 </resources>

@@ -1,3 +1,202 @@
 package com.sdax.flashandstrobe;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-public class SosActivity extends AppCompatActivity {}
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+public class SosActivity extends AppCompatActivity {
+
+    private CameraManager cameraManager;
+    private String cameraId;
+    private boolean isSosActive = false;
+    private boolean hasFlash = false;
+
+    private Button btnToggleSos;
+    private TextView tvStatus;
+    private TextView tvHint;
+
+    // Тайминги (мс)
+    private static final int DOT = 150;
+    private static final int DASH = 450;
+    private static final int PAUSE_BETWEEN_SIGNALS = 150;
+    private static final int PAUSE_BETWEEN_LETTERS = 300;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable sosRunnable;
+
+    private static final int REQUEST_CAMERA_PERMISSION = 101;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sos);
+
+        btnToggleSos = findViewById(R.id.btnToggleSos);
+        tvStatus = findViewById(R.id.tvStatus);
+        tvHint = findViewById(R.id.tvHint);
+
+        cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
+
+        // Поиск камеры со вспышкой
+        try {
+            String[] cameraIds = cameraManager.getCameraIdList();
+            for (String id : cameraIds) {
+                Boolean flashAvailable = cameraManager.getCameraCharacteristics(
+                        cameraManager.getCameraIdList()[0]
+                ).get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                if (flashAvailable != null && flashAvailable) {
+                    cameraId = id;
+                    hasFlash = true;
+                    break;
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+            tvStatus.setText("Ошибка доступа к камере");
+            btnToggleSos.setEnabled(false);
+            return;
+        }
+
+        if (!hasFlash || cameraId == null) {
+            tvStatus.setText("На этом устройстве нет вспышки");
+            btnToggleSos.setEnabled(false);
+            return;
+        }
+
+        // Запрос прав
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        REQUEST_CAMERA_PERMISSION);
+            } else {
+                setupSosButton();
+            }
+        } else {
+            setupSosButton();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setupSosButton();
+            } else {
+                tvStatus.setText("Нужны права на камеру для SOS");
+                btnToggleSos.setEnabled(false);
+                Toast.makeText(this, "Без разрешения SOS не работает", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void setupSosButton() {
+        btnToggleSos.setOnClickListener(v -> toggleSos());
+    }
+
+    private void toggleSos() {
+        if (!hasFlash || cameraId == null) return;
+
+        isSosActive = !isSosActive;
+
+        if (isSosActive) {
+            // Включаем режим SOS
+            btnToggleSos.setText("ВЫКЛЮЧИТЬ SOS");
+            btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_on));
+            tvStatus.setText("SOS: передача сигнала...");
+            startSosPattern();
+        } else {
+            // Выключаем SOS
+            stopSos();
+            btnToggleSos.setText("ВКЛЮЧИТЬ SOS");
+            btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
+            tvStatus.setText("SOS остановлен");
+        }
+    }
+
+    private void startSosPattern() {
+        // Паттерн SOS: · · · — — — · · ·
+        int[] pattern = {
+                DOT, PAUSE_BETWEEN_SIGNALS,
+                DOT, PAUSE_BETWEEN_SIGNALS,
+                DOT, PAUSE_BETWEEN_LETTERS,
+
+                DASH, PAUSE_BETWEEN_SIGNALS,
+                DASH, PAUSE_BETWEEN_SIGNALS,
+                DASH, PAUSE_BETWEEN_LETTERS,
+
+                DOT, PAUSE_BETWEEN_SIGNALS,
+                DOT, PAUSE_BETWEEN_SIGNALS,
+                DOT, 1000 // пауза в конце цикла перед повторением
+        };
+
+        sosRunnable = new Runnable() {
+            private int index = 0;
+
+            @Override
+            public void run() {
+                if (!isSosActive || cameraId == null || !hasFlash) {
+                    stopSos();
+                    return;
+                }
+
+                if (index >= pattern.length) {
+                    // Цикл завершён — повторяем снова
+                    index = 0;
+                }
+
+                int duration = pattern[index];
+                boolean turnOn = (index % 2 == 0); // чётные индексы — вспышка ВКЛ
+
+                try {
+                    cameraManager.setTorchMode(cameraId, turnOn);
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                    stopSos();
+                    tvStatus.setText("Ошибка вспышки");
+                    return;
+                }
+
+                index++;
+                handler.postDelayed(this, duration);
+            }
+        };
+
+        handler.post(sosRunnable);
+    }
+
+    private void stopSos() {
+        isSosActive = false;
+        handler.removeCallbacks(sosRunnable);
+        try {
+            if (cameraId != null) {
+                cameraManager.setTorchMode(cameraId, false);
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Гарантированно выключаем вспышку при уходе с экрана
+        stopSos();
+    }
+}
