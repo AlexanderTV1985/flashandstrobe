@@ -32,7 +32,7 @@ public class FlickerActivity extends AppCompatActivity {
     private Button btnToggleFlicker;
     private TextView tvStatus;
 
-    // Базовые диапазоны
+    // Базовые диапазоны длительности вспышки
     private static final int MIN_FLASH_DURATION = 80;
     private static final int MAX_FLASH_DURATION = 250;
 
@@ -65,41 +65,35 @@ public class FlickerActivity extends AppCompatActivity {
         try {
             String[] cameraIds = cameraManager.getCameraIdList();
             if (cameraIds == null || cameraIds.length == 0) {
-                tvStatus.setText("Нет камер на устройстве");
+                tvStatus.setText(getString(R.string.about_description));
                 btnToggleFlicker.setEnabled(false);
                 return;
             }
 
-            Boolean flashAvailable = cameraManager.getCameraCharacteristics(cameraIds[0])
-                    .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
-
-            if (flashAvailable != null && flashAvailable) {
-                cameraId = cameraIds[0];
-                hasFlash = true;
-            } else {
-                for (String id : cameraIds) {
-                    flashAvailable = cameraManager.getCameraCharacteristics(id)
-                            .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
-                    if (flashAvailable != null && flashAvailable) {
-                        cameraId = id;
-                        hasFlash = true;
-                        break;
-                    }
+            // Ищем первую камеру со вспышкой
+            for (String id : cameraIds) {
+                Boolean flashAvailable = cameraManager.getCameraCharacteristics(id)
+                        .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                if (flashAvailable != null && flashAvailable) {
+                    cameraId = id;
+                    hasFlash = true;
+                    break;
                 }
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            tvStatus.setText("Ошибка доступа к камере");
+            tvStatus.setText(getString(R.string.about_description));
             btnToggleFlicker.setEnabled(false);
             return;
         }
 
         if (!hasFlash || cameraId == null) {
-            tvStatus.setText("На этом устройстве нет вспышки");
+            tvStatus.setText(getString(R.string.about_warning));
             btnToggleFlicker.setEnabled(false);
             return;
         }
 
+        // Запрос разрешения на камеру
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -121,31 +115,37 @@ public class FlickerActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupFlickerButton();
             } else {
-                tvStatus.setText("Нужны права на камеру для режима мерцания");
+                tvStatus.setText(getString(R.string.tv_status_ready));
                 btnToggleFlicker.setEnabled(false);
-                Toast.makeText(this, "Без разрешения режим мерцания не работает", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.permission_denied_message), Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void setupFlickerButton() {
+        updateButtonText(isFlickerActive);
         btnToggleFlicker.setOnClickListener(v -> tryStartFlicker());
     }
 
-    /**
-     * Входной шлюз: сначала проверяет, нужно ли показать предупреждение.
-     */
+    private void updateButtonText(boolean isActive) {
+        if (isActive) {
+            btnToggleFlicker.setText(getString(R.string.btn_flicker_off));
+        } else {
+            btnToggleFlicker.setText(getString(R.string.btn_flicker_on));
+        }
+    }
+
     private void tryStartFlicker() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean warned = prefs.getBoolean(KEY_FLICKER_WARNING_SHOWN, false);
 
         if (!warned) {
             new AlertDialog.Builder(this)
-                    .setTitle("⚠️ Внимание")
-                    .setMessage("Режим мерцания (Flicker) может быть опасен для людей с фоточувствительной эпилепсией. Используйте с осторожностью.")
-                    .setPositiveButton("Понял, включаю", (dialog, which) -> {
+                    .setTitle(getString(R.string.alert_title))
+                    .setMessage(getString(R.string.flicker_strobe_warning_message))
+                    .setPositiveButton(getString(android.R.string.ok), (dialog, which) -> {
                         prefs.edit().putBoolean(KEY_FLICKER_WARNING_SHOWN, true).apply();
-                        toggleFlicker(); // Запускаем реальную логику
+                        toggleFlicker();
                     })
                     .setCancelable(false)
                     .show();
@@ -155,96 +155,61 @@ public class FlickerActivity extends AppCompatActivity {
     }
 
     private void toggleFlicker() {
-        if (!hasFlash || cameraId == null) return;
-
         isFlickerActive = !isFlickerActive;
+        updateButtonText(isFlickerActive);
 
         if (isFlickerActive) {
-            btnToggleFlicker.setText("ВЫКЛЮЧИТЬ МЕРЦАНИЕ");
-            btnToggleFlicker.setBackgroundColor(ContextCompat.getColor(this, R.color.flicker_btn));
-            tvStatus.setText("Мерцание: режим «космический шум» активен");
-            startFlickerLoop();
+            tvStatus.setText(getString(R.string.tv_status_flicker_active));
+            startFlickering();
         } else {
-            stopFlicker();
-            btnToggleFlicker.setText("ВКЛЮЧИТЬ МЕРЦАНИЕ");
-            btnToggleFlicker.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
-            tvStatus.setText("Мерцание остановлено");
+            stopFlickering();
+            tvStatus.setText(getString(R.string.tv_status_ready));
         }
     }
 
-    private void startFlickerLoop() {
-        flickerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!isFlickerActive || cameraId == null || !hasFlash) {
-                    stopFlicker();
-                    return;
-                }
+    private void startFlickering() {
+        flickerRunnable = () -> {
+            try {
+                cameraManager.setTorchMode(cameraId, true);
+                int flashDuration = random.nextInt(MAX_FLASH_DURATION - MIN_FLASH_DURATION + 1) + MIN_FLASH_DURATION;
 
-                boolean isDenseNoise = random.nextBoolean();
-
-                int minPause = isDenseNoise ? DENSE_MIN_PAUSE : RARE_MIN_PAUSE;
-                int maxPause = isDenseNoise ? DENSE_MAX_PAUSE : RARE_MAX_PAUSE;
-
-                int segmentLength = random.nextInt(3) + 2; // от 2 до 4 вспышек в группе
-
-                runSegment(0, segmentLength, minPause, maxPause);
+                handler.postDelayed(() -> {
+                    try {
+                        cameraManager.setTorchMode(cameraId, false);
+                        int pause;
+                        // Чередуем режимы пауз для более «случайного» эффекта
+                        if (random.nextBoolean()) {
+                            pause = random.nextInt(RARE_MAX_PAUSE - RARE_MIN_PAUSE + 1) + RARE_MIN_PAUSE;
+                        } else {
+                            pause = random.nextInt(DENSE_MAX_PAUSE - DENSE_MIN_PAUSE + 1) + DENSE_MIN_PAUSE;
+                        }
+                        if (isFlickerActive) {
+                            handler.postDelayed(flickerRunnable, pause);
+                        }
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                        stopFlickering();
+                        Toast.makeText(FlickerActivity.this, getString(R.string.flash_error_message), Toast.LENGTH_SHORT).show();
+                    }
+                }, flashDuration);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+                stopFlickering();
+                Toast.makeText(FlickerActivity.this, getString(R.string.flash_error_message), Toast.LENGTH_SHORT).show();
             }
         };
 
         handler.post(flickerRunnable);
     }
 
-    private void runSegment(int currentIndex, int totalCount, int minPause, int maxPause) {
-        if (!isFlickerActive || cameraId == null || !hasFlash) {
-            stopFlicker();
-            return;
-        }
-
-        if (currentIndex >= totalCount) {
-            int longPause = random.nextInt(600) + 400; // пауза 400–1000 мс между «волнами»
-            handler.postDelayed(() -> {
-                handler.post(flickerRunnable);
-            }, longPause);
-            return;
-        }
-
-        int flashDuration = random.nextInt(MAX_FLASH_DURATION - MIN_FLASH_DURATION + 1) + MIN_FLASH_DURATION;
-        int pauseDuration = random.nextInt(maxPause - minPause + 1) + minPause;
-
-        try {
-            cameraManager.setTorchMode(cameraId, true);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-            stopFlicker();
-            tvStatus.setText("Ошибка вспышки");
-            return;
-        }
-
-        handler.postDelayed(() -> {
-            try {
-                cameraManager.setTorchMode(cameraId, false);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-                stopFlicker();
-                tvStatus.setText("Ошибка вспышки");
-                return;
-            }
-
-            handler.postDelayed(() ->
-                            runSegment(currentIndex + 1, totalCount, minPause, maxPause),
-                    pauseDuration
-            );
-        }, flashDuration);
-    }
-
-    private void stopFlicker() {
+    private void stopFlickering() {
         isFlickerActive = false;
-        handler.removeCallbacks(flickerRunnable);
+        if (flickerRunnable != null) {
+            handler.removeCallbacks(flickerRunnable);
+            flickerRunnable = null;
+        }
         try {
-            if (cameraId != null) {
-                cameraManager.setTorchMode(cameraId, false);
-            }
+            cameraManager.setTorchMode(cameraId, false);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -253,6 +218,6 @@ public class FlickerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopFlicker();
+        stopFlickering();
     }
 }

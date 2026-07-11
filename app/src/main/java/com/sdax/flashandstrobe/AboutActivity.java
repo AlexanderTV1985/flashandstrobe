@@ -12,12 +12,12 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        // Получаем версию приложения и ставим в TextView
         try {
             String version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             TextView tvVersion = findViewById(R.id.tvVersion);
             if (tvVersion != null) {
-                tvVersion.setText("Версия: " + version);
+                // Используем шаблон из strings.xml, если хочешь, или просто конкатенацию
+                tvVersion.setText(getString(R.string.app_name) + " v" + version);
             }
         } catch (Exception e) {
             e.printStackTrace();

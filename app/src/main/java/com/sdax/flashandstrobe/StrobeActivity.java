@@ -1,6 +1,5 @@
 package com.sdax.flashandstrobe;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
@@ -8,6 +7,7 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -27,13 +27,12 @@ public class StrobeActivity extends AppCompatActivity {
     private boolean isStrobeOn = false;
     private long flashIntervalMs = 200;
 
-    // Это поле нужно, чтобы мы сами хранили следующее состояние вспышки
-    private boolean nextTorchState = true;
+    // Флаг текущего состояния вспышки ВНУТРИ цикла стробоскопа
+    private boolean currentTorchState = false;
 
-    private Handler handler = new Handler();
+    private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable strobeRunnable;
 
-    // Переменные названы так же, как ID в XML
     private Button btnToggleStrobe;
     private TextView tvStatusStrobe;
     private SeekBar seekFrequency;
@@ -48,7 +47,6 @@ public class StrobeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_strobe);
 
-        // Эти строки ПРАВИЛЬНЫЕ. Не меняй их.
         btnToggleStrobe = findViewById(R.id.btnToggleStrobe);
         tvStatusStrobe = findViewById(R.id.tvStatusStrobe);
         seekFrequency = findViewById(R.id.seekFrequency);
@@ -63,38 +61,45 @@ public class StrobeActivity extends AppCompatActivity {
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            tvStatusStrobe.setText("Ошибка доступа к камере");
+            tvStatusStrobe.setText(getString(R.string.about_description));
             btnToggleStrobe.setEnabled(false);
+            seekFrequency.setEnabled(false);
+            return;
         }
 
         if (cameraId == null) {
-            tvStatusStrobe.setText("На этом устройстве нет вспышки");
+            tvStatusStrobe.setText(getString(R.string.about_warning));
             btnToggleStrobe.setEnabled(false);
             seekFrequency.setEnabled(false);
-        } else {
-            seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    flashIntervalMs = 300 - (progress * 13);
-                    if (flashIntervalMs < 50) flashIntervalMs = 50;
-                    tvFreqValue.setText("Частота: " + (1000 / flashIntervalMs) + " Гц");
-                }
-                @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-                @Override public void onStopTrackingTouch(SeekBar seekBar) {}
-            });
+            return;
+        }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{android.Manifest.permission.CAMERA},
-                            REQUEST_CAMERA_PERMISSION);
-                } else {
-                    setupStrobeButton();
-                }
+        // Настройка ползунка частоты
+        seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                flashIntervalMs = 300 - (progress * 13);
+                if (flashIntervalMs < 50) flashIntervalMs = 50;
+                int hz = (int) (1000.0 / flashIntervalMs);
+                tvFreqValue.setText(getString(R.string.tv_freq_value_format, hz));
+            }
+
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        // Запрос разрешения на камеру
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.CAMERA},
+                        REQUEST_CAMERA_PERMISSION);
             } else {
                 setupStrobeButton();
             }
+        } else {
+            setupStrobeButton();
         }
     }
 
@@ -105,31 +110,38 @@ public class StrobeActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupStrobeButton();
             } else {
-                tvStatusStrobe.setText("Нужны права на камеру для стробоскопа");
+                tvStatusStrobe.setText(getString(R.string.tv_status_ready));
                 btnToggleStrobe.setEnabled(false);
-                Toast.makeText(this, "Без разрешения стробоскоп не работает", Toast.LENGTH_LONG).show();
+                seekFrequency.setEnabled(false);
+                Toast.makeText(this, getString(R.string.permission_denied_message), Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void setupStrobeButton() {
         btnToggleStrobe.setOnClickListener(v -> tryStartStrobe());
+        updateButtonText(isStrobeOn);
     }
 
-    /**
-     * Этот метод теперь отвечает за запуск: сначала проверяет, нужно ли показать предупреждение.
-     */
+    private void updateButtonText(boolean isOn) {
+        if (isOn) {
+            btnToggleStrobe.setText(getString(R.string.btn_strobe_off));
+        } else {
+            btnToggleStrobe.setText(getString(R.string.btn_strobe_on));
+        }
+    }
+
     private void tryStartStrobe() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean warned = prefs.getBoolean(KEY_STROBE_WARNING_SHOWN, false);
 
         if (!warned) {
             new AlertDialog.Builder(this)
-                    .setTitle("⚠️ Внимание")
-                    .setMessage("Режим стробоскопа может быть опасен для людей с фоточувствительной эпилепсией. Используйте с осторожностью.")
-                    .setPositiveButton("Понял, включаю", (dialog, which) -> {
+                    .setTitle(getString(R.string.alert_title))
+                    .setMessage(getString(R.string.flicker_strobe_warning_message))
+                    .setPositiveButton(getString(android.R.string.ok), (dialog, which) -> {
                         prefs.edit().putBoolean(KEY_STROBE_WARNING_SHOWN, true).apply();
-                        toggleStrobe(); // Запускаем реальную логику
+                        toggleStrobe();
                     })
                     .setCancelable(false)
                     .show();
@@ -142,50 +154,46 @@ public class StrobeActivity extends AppCompatActivity {
         if (cameraId == null) return;
 
         isStrobeOn = !isStrobeOn;
+        updateButtonText(isStrobeOn);
 
         if (isStrobeOn) {
-            btnToggleStrobe.setText("ВЫКЛЮЧИТЬ СТРОБОСКОП");
-            // Если у тебя нет цветов в colors.xml — закомментируй строку ниже
-            btnToggleStrobe.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_on));
+            // Перед запуском сбрасываем внутреннее состояние на «выключено»,
+            // чтобы первый шаг цикла был «включить»
+            currentTorchState = false;
 
-            tvStatusStrobe.setText("Стробоскоп работает");
+            btnToggleStrobe.setBackgroundColor(ContextCompat.getColor(this, R.color.strobe_btn));
+            tvStatusStrobe.setText(getString(R.string.tv_hint_strobe));
             startStrobeLoop();
         } else {
-            btnToggleStrobe.setText("ВКЛЮЧИТЬ СТРОБОСКОП");
             btnToggleStrobe.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
-
-            tvStatusStrobe.setText("Готов к работе");
+            tvStatusStrobe.setText(getString(R.string.tv_status_ready));
             stopStrobeLoop();
         }
     }
 
     private void startStrobeLoop() {
-        strobeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!isStrobeOn) {
-                    stopStrobeLoop();
-                    return;
-                }
-
-                try {
-                    // Мы сами управляем состоянием, поэтому не нужно спрашивать камеру
-                    cameraManager.setTorchMode(cameraId, nextTorchState);
-                    nextTorchState = !nextTorchState; // инвертируем для следующего кадра
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
-                    stopStrobeLoop();
-                }
-                handler.postDelayed(this, flashIntervalMs);
+        strobeRunnable = () -> {
+            try {
+                // Инвертируем наше локальное состояние
+                currentTorchState = !currentTorchState;
+                cameraManager.setTorchMode(cameraId, currentTorchState);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+                stopStrobeLoop();
+                Toast.makeText(StrobeActivity.this, getString(R.string.flash_error_message), Toast.LENGTH_SHORT).show();
+                return;
             }
+            handler.postDelayed(strobeRunnable, flashIntervalMs);
         };
         handler.post(strobeRunnable);
     }
 
     private void stopStrobeLoop() {
         handler.removeCallbacks(strobeRunnable);
+        strobeRunnable = null;
         try {
             cameraManager.setTorchMode(cameraId, false);
+            currentTorchState = false; // синхронизируем состояние
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }

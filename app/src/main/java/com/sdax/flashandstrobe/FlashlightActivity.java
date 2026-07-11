@@ -6,6 +6,7 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +24,6 @@ public class FlashlightActivity extends AppCompatActivity {
     private Button btnToggleFlash;
     private TextView tvStatus;
 
-    // Код запроса прав (для API 23+)
     private static final int REQUEST_CAMERA_PERMISSION = 100;
 
     @Override
@@ -37,30 +37,30 @@ public class FlashlightActivity extends AppCompatActivity {
         cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
 
         try {
-            // Получаем ID камеры со вспышкой (обычно это задняя камера)
             String[] cameraIds = cameraManager.getCameraIdList();
-            for (String id : cameraIds) {
-                if (cameraManager.getCameraCharacteristics(
-                                cameraManager.getCameraIdList()[0])
-                        .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
-                    cameraId = id;
-                    break;
+            if (cameraIds != null) {
+                for (String id : cameraIds) {
+                    Boolean flashAvailable = cameraManager.getCameraCharacteristics(id)
+                            .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                    if (flashAvailable != null && flashAvailable) {
+                        cameraId = id;
+                        break;
+                    }
                 }
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            tvStatus.setText("Ошибка доступа к камере");
-            btnToggleFlash.setEnabled(false);
-        }
-
-        // Если нет камеры со вспышкой — сразу отключаем кнопку
-        if (cameraId == null) {
-            tvStatus.setText("На этом устройстве нет вспышки");
+            tvStatus.setText(getString(R.string.tv_status_ready));
             btnToggleFlash.setEnabled(false);
             return;
         }
 
-        // Проверка и запрос прав для Android 6.0+
+        if (cameraId == null) {
+            tvStatus.setText(getString(R.string.about_warning));
+            btnToggleFlash.setEnabled(false);
+            return;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -68,11 +68,9 @@ public class FlashlightActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.CAMERA},
                         REQUEST_CAMERA_PERMISSION);
             } else {
-                // Права уже есть — можно работать
                 setupFlashButton();
             }
         } else {
-            // Для старых Android (ниже 6.0) права уже в манифесте — можно работать
             setupFlashButton();
         }
     }
@@ -84,15 +82,25 @@ public class FlashlightActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupFlashButton();
             } else {
-                tvStatus.setText("Нужны права на камеру, чтобы включить фонарик");
+                tvStatus.setText(getString(R.string.tv_status_ready));
                 btnToggleFlash.setEnabled(false);
-                Toast.makeText(this, "Без разрешения фонарик не работает", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.permission_denied_message), Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void setupFlashButton() {
         btnToggleFlash.setOnClickListener(v -> toggleFlash());
+        updateButtonText(isFlashOn);
+    }
+
+    private void updateButtonText(boolean isOn) {
+        Button btn = findViewById(R.id.btnToggleFlash);
+        if (isOn) {
+            btn.setText(getString(R.string.btn_flash_off));
+        } else {
+            btn.setText(getString(R.string.btn_flash_on));
+        }
     }
 
     private void toggleFlash() {
@@ -101,31 +109,30 @@ public class FlashlightActivity extends AppCompatActivity {
         try {
             isFlashOn = !isFlashOn;
             cameraManager.setTorchMode(cameraId, isFlashOn);
+            updateButtonText(isFlashOn);
 
             if (isFlashOn) {
-                btnToggleFlash.setText("ВЫКЛЮЧИТЬ ФОНАРИК");
+                tvStatus.setText(getString(R.string.tv_hint_flash));
                 btnToggleFlash.setBackgroundColor(
                         ContextCompat.getColor(this, R.color.flash_on)
                 );
-                tvStatus.setText("Фонарик включён");
             } else {
-                btnToggleFlash.setText("ВКЛЮЧИТЬ ФОНАРИК");
+                tvStatus.setText(getString(R.string.tv_status_ready));
                 btnToggleFlash.setBackgroundColor(
                         ContextCompat.getColor(this, R.color.flash_off)
                 );
-                tvStatus.setText("Фонарик выключен");
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Ошибка управления вспышкой", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.flash_error_message), Toast.LENGTH_SHORT).show();
             isFlashOn = false;
+            updateButtonText(false);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Важно: выключаем фонарик, если пользователь ушёл с экрана
         if (isFlashOn && cameraId != null) {
             try {
                 cameraManager.setTorchMode(cameraId, false);

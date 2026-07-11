@@ -51,28 +51,29 @@ public class SosActivity extends AppCompatActivity {
 
         cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
 
-        // Поиск камеры со вспышкой
+        // Поиск камеры со вспышкой (исправлено)
         try {
             String[] cameraIds = cameraManager.getCameraIdList();
-            for (String id : cameraIds) {
-                Boolean flashAvailable = cameraManager.getCameraCharacteristics(
-                        cameraManager.getCameraIdList()[0]
-                ).get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
-                if (flashAvailable != null && flashAvailable) {
-                    cameraId = id;
-                    hasFlash = true;
-                    break;
+            if (cameraIds != null) {
+                for (String id : cameraIds) {
+                    Boolean flashAvailable = cameraManager.getCameraCharacteristics(id)
+                            .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                    if (flashAvailable != null && flashAvailable) {
+                        cameraId = id;
+                        hasFlash = true;
+                        break;
+                    }
                 }
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            tvStatus.setText("Ошибка доступа к камере");
+            tvStatus.setText(getString(R.string.about_description)); // или отдельная строка «Ошибка доступа к камере»
             btnToggleSos.setEnabled(false);
             return;
         }
 
         if (!hasFlash || cameraId == null) {
-            tvStatus.setText("На этом устройстве нет вспышки");
+            tvStatus.setText(getString(R.string.about_warning)); // или отдельная строка «Нет вспышки»
             btnToggleSos.setEnabled(false);
             return;
         }
@@ -99,34 +100,42 @@ public class SosActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupSosButton();
             } else {
-                tvStatus.setText("Нужны права на камеру для SOS");
+                tvStatus.setText(getString(R.string.about_description));
                 btnToggleSos.setEnabled(false);
-                Toast.makeText(this, "Без разрешения SOS не работает", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.about_license), Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void setupSosButton() {
         btnToggleSos.setOnClickListener(v -> toggleSos());
+        updateButtonText(isSosActive);
+    }
+
+    private void updateButtonText(boolean isActive) {
+        if (isActive) {
+            btnToggleSos.setText(getString(R.string.btn_sos_off));
+        } else {
+            btnToggleSos.setText(getString(R.string.btn_sos_on));
+        }
     }
 
     private void toggleSos() {
         if (!hasFlash || cameraId == null) return;
 
         isSosActive = !isSosActive;
+        updateButtonText(isSosActive);
 
         if (isSosActive) {
             // Включаем режим SOS
-            btnToggleSos.setText("ВЫКЛЮЧИТЬ SOS");
-            btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_on));
-            tvStatus.setText("SOS: передача сигнала...");
+            btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.sos_btn));
+            tvStatus.setText(getString(R.string.tv_hint_sos));
             startSosPattern();
         } else {
             // Выключаем SOS
             stopSos();
-            btnToggleSos.setText("ВКЛЮЧИТЬ SOS");
             btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
-            tvStatus.setText("SOS остановлен");
+            tvStatus.setText(getString(R.string.tv_status_ready));
         }
     }
 
@@ -157,8 +166,7 @@ public class SosActivity extends AppCompatActivity {
                 }
 
                 if (index >= pattern.length) {
-                    // Цикл завершён — повторяем снова
-                    index = 0;
+                    index = 0; // цикл повторяется
                 }
 
                 int duration = pattern[index];
@@ -169,7 +177,7 @@ public class SosActivity extends AppCompatActivity {
                 } catch (CameraAccessException e) {
                     e.printStackTrace();
                     stopSos();
-                    tvStatus.setText("Ошибка вспышки");
+                    tvStatus.setText(getString(R.string.about_author)); // или спец. строка «Ошибка вспышки»
                     return;
                 }
 
@@ -196,7 +204,6 @@ public class SosActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Гарантированно выключаем вспышку при уходе с экрана
         stopSos();
     }
 }

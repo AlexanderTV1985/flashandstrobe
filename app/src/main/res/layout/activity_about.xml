@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/about_bg"
@@ -30,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="О приложении"
+            android:text="@string/about_title"
             android:textColor="@color/about_title"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -39,15 +40,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Приложение управляет вспышкой камеры и реализует режимы фонарика, стробоскопа, SOS и мерцания.&#10;&#10;⚠️ Длительное мерцание может быть небезопасным при склонности к светочувствительной эпилепсии. Используйте с осторожностью."
+            android:text="@string/about_description"
             android:textColor="@color/about_body"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_warning"
+            android:textColor="#FF5252"
+            android:textSize="14sp"
             android:lineSpacingExtra="4dp"
             android:layout_marginBottom="24dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Автор: SDax&#10;Лицензия: MIT"
+            android:text="@string/about_author"
+            android:textColor="@color/about_muted"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_license"
             android:textColor="@color/about_muted"/>
     </LinearLayout>
 </ScrollView>

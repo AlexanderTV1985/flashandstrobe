@@ -1,9 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Фонарик и Стробоскоп</string>
+
+    <!-- Предупреждения и диалоги -->
+    <string name="alert_title">⚠️ Внимание</string>
+    <string name="flicker_strobe_warning_message">⚠️ Мерцание и стробоскоп могут быть опасны при светочувствительной эпилепсии. Продолжить?</string>
+
+    <!-- Кнопки главного экрана -->
     <string name="btn_flashlight">Фонарик</string>
     <string name="btn_strobe">Стробоскоп</string>
     <string name="btn_sos">Режим SOS</string>
     <string name="btn_flicker">Мерцание</string>
     <string name="btn_about">О приложении</string>
+
+    <!-- Тексты кнопок ВКЛ/ВЫКЛ -->
+    <string name="btn_flash_on">ВКЛЮЧИТЬ ФОНАРИК</string>
+    <string name="btn_flash_off">ВЫКЛЮЧИТЬ ФОНАРИК</string>
+    <string name="btn_strobe_on">ВКЛЮЧИТЬ СТРОБОСКОП</string>
+    <string name="btn_strobe_off">ВЫКЛЮЧИТЬ СТРОБОСКОП</string>
+    <string name="btn_sos_on">ЗАПУСТИТЬ SOS</string>
+    <string name="btn_sos_off">ОСТАНОВИТЬ SOS</string>
+    <string name="btn_flicker_on">ВКЛЮЧИТЬ МЕРЦАНИЕ</string>
+    <string name="btn_flicker_off">ВЫКЛЮЧИТЬ МЕРЦАНИЕ</string>
+
+    <!-- Статусы и подсказки -->
+    <string name="tv_status_ready">Готов к работе</string>
+    <string name="tv_hint_flash">Нажмите кнопку, чтобы включить фонарик</string>
+    <string name="tv_hint_sos">SOS: · · · — — — · · ·</string>
+    <string name="tv_hint_flicker">Режим космического шума: случайные вспышки</string>
+    <string name="tv_hint_strobe">Регулируйте частоту вспышек ползунком</string>
+    <string name="tv_status_flicker_active">Мерцание: режим «космический шум» активен</string>
+
+    <!-- О приложении -->
+    <string name="about_title">О приложении</string>
+    <string name="about_description">Приложение управляет вспышкой камеры и реализует режимы фонарика, стробоскопа, SOS и мерцания.</string>
+    <string name="about_warning">⚠️ Длительное мерцание может быть небезопасным при склонности к светочувствительной эпилепсии. Используйте с осторожностью.</string>
+    <string name="about_author">Автор: SDax</string>
+    <string name="about_license">Лицензия: MIT</string>
+
+    <!-- Стробоскоп: частота -->
+    <string name="tv_freq_value_format">Частота: %1$d Гц</string>
+
+    <!-- Сообщения об ошибках и правах -->
+    <string name="permission_denied_message">Требуется разрешение на использование камеры</string>
+    <string name="flash_error_message">Ошибка управления вспышкой</string>
 </resources>
