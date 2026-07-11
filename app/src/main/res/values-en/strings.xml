@@ -36,4 +36,6 @@
 
     <string name="permission_denied_message">Camera permission required</string>
     <string name="flash_error_message">Flash control error</string>
+
+
 </resources>

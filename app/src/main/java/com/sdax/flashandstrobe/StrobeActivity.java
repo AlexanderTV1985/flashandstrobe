@@ -38,6 +38,9 @@ public class StrobeActivity extends AppCompatActivity {
     private SeekBar seekFrequency;
     private TextView tvFreqValue;
 
+    private TextView tvStatus;
+
+
     private static final int REQUEST_CAMERA_PERMISSION = 101;
     private static final String PREFS_NAME = "app_prefs";
     private static final String KEY_STROBE_WARNING_SHOWN = "strobe_warning_shown";
@@ -48,7 +51,7 @@ public class StrobeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_strobe);
 
         btnToggleStrobe = findViewById(R.id.btnToggleStrobe);
-        tvStatusStrobe = findViewById(R.id.tvStatusStrobe);
+        tvStatus = findViewById(R.id.tvStatus);
         seekFrequency = findViewById(R.id.seekFrequency);
         tvFreqValue = findViewById(R.id.tvFreqValue);
 
