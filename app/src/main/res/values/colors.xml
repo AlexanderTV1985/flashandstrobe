@@ -20,4 +20,10 @@
     <!-- Flicker («Космический шум») -->
     <color name="flicker_btn">#8BC34A</color>        <!-- Мягкий зелёный — ассоциация с «помехами/экраном» -->
     <color name="flicker_text">#000000</color>      <!-- Чёрный текст для контраста на зелёном -->
+
+    <!-- Цвета для AboutActivity -->
+    <color name="about_bg">@color/background_dark</color>
+    <color name="about_title">@color/text_primary</color>
+    <color name="about_body">@color/text_primary</color>
+    <color name="about_muted">@color/text_hint</color>
 </resources>

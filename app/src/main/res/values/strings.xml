@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Фонарик и Стробоскоп</string>
     <string name="btn_flashlight">Фонарик</string>
     <string name="btn_strobe">Стробоскоп</string>
     <string name="btn_sos">Режим SOS</string>
     <string name="btn_flicker">Мерцание</string>
+    <string name="btn_about">О приложении</string>
 </resources>

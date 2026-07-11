@@ -54,5 +54,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <!-- Экран «О приложении» -->
+        <activity
+            android:name="com.sdax.flashandstrobe.AboutActivity"
+            android:exported="false" />
     </application>
 </manifest>

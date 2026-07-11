@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStrobe;
     private Button btnSos;
     private Button btnFlicker;
+    private Button btnAbout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         btnStrobe = findViewById(R.id.btnStrobe);
         btnSos = findViewById(R.id.btnSos);
         btnFlicker = findViewById(R.id.btnFlicker);
+        btnAbout = findViewById(R.id.btnAbout);
 
         btnFlashlight.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, FlashlightActivity.class))
@@ -37,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
         btnFlicker.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, FlickerActivity.class))
+        );
+
+        btnAbout.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, AboutActivity.class))
         );
     }
 }
