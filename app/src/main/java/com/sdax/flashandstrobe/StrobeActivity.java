@@ -1,5 +1,7 @@
 package com.sdax.flashandstrobe;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,6 +40,8 @@ public class StrobeActivity extends AppCompatActivity {
     private TextView tvFreqValue;
 
     private static final int REQUEST_CAMERA_PERMISSION = 101;
+    private static final String PREFS_NAME = "app_prefs";
+    private static final String KEY_STROBE_WARNING_SHOWN = "strobe_warning_shown";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,7 @@ public class StrobeActivity extends AppCompatActivity {
 
         try {
             String[] cameraIds = cameraManager.getCameraIdList();
-            if (cameraIds.length > 0) {
+            if (cameraIds != null && cameraIds.length > 0) {
                 cameraId = cameraIds[0];
             }
         } catch (CameraAccessException e) {
@@ -108,7 +113,29 @@ public class StrobeActivity extends AppCompatActivity {
     }
 
     private void setupStrobeButton() {
-        btnToggleStrobe.setOnClickListener(v -> toggleStrobe());
+        btnToggleStrobe.setOnClickListener(v -> tryStartStrobe());
+    }
+
+    /**
+     * Этот метод теперь отвечает за запуск: сначала проверяет, нужно ли показать предупреждение.
+     */
+    private void tryStartStrobe() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean warned = prefs.getBoolean(KEY_STROBE_WARNING_SHOWN, false);
+
+        if (!warned) {
+            new AlertDialog.Builder(this)
+                    .setTitle("⚠️ Внимание")
+                    .setMessage("Режим стробоскопа может быть опасен для людей с фоточувствительной эпилепсией. Используйте с осторожностью.")
+                    .setPositiveButton("Понял, включаю", (dialog, which) -> {
+                        prefs.edit().putBoolean(KEY_STROBE_WARNING_SHOWN, true).apply();
+                        toggleStrobe(); // Запускаем реальную логику
+                    })
+                    .setCancelable(false)
+                    .show();
+        } else {
+            toggleStrobe();
+        }
     }
 
     private void toggleStrobe() {

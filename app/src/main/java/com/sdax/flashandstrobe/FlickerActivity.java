@@ -1,6 +1,7 @@
 package com.sdax.flashandstrobe;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +49,8 @@ public class FlickerActivity extends AppCompatActivity {
     private Random random = new Random();
 
     private static final int REQUEST_CAMERA_PERMISSION = 102;
+    private static final String PREFS_NAME = "app_prefs";
+    private static final String KEY_FLICKER_WARNING_SHOWN = "flicker_warning_shown";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +129,29 @@ public class FlickerActivity extends AppCompatActivity {
     }
 
     private void setupFlickerButton() {
-        btnToggleFlicker.setOnClickListener(v -> toggleFlicker());
+        btnToggleFlicker.setOnClickListener(v -> tryStartFlicker());
+    }
+
+    /**
+     * Входной шлюз: сначала проверяет, нужно ли показать предупреждение.
+     */
+    private void tryStartFlicker() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean warned = prefs.getBoolean(KEY_FLICKER_WARNING_SHOWN, false);
+
+        if (!warned) {
+            new AlertDialog.Builder(this)
+                    .setTitle("⚠️ Внимание")
+                    .setMessage("Режим мерцания (Flicker) может быть опасен для людей с фоточувствительной эпилепсией. Используйте с осторожностью.")
+                    .setPositiveButton("Понял, включаю", (dialog, which) -> {
+                        prefs.edit().putBoolean(KEY_FLICKER_WARNING_SHOWN, true).apply();
+                        toggleFlicker(); // Запускаем реальную логику
+                    })
+                    .setCancelable(false)
+                    .show();
+        } else {
+            toggleFlicker();
+        }
     }
 
     private void toggleFlicker() {
