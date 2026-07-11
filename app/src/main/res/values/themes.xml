@@ -1,8 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Flashandstrobe" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Base application theme. Больше не DayNight — фиксируем поведение. -->
+    <style name="Base.Theme.Flashandstrobe" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Привязываем цвета к твоим ресурсам, если Material3 их требует -->
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <!-- Если нужно, можно явно задать и другие атрибуты Material3, но пока хватит этого -->
     </style>
 
     <style name="Theme.Flashandstrobe" parent="Base.Theme.Flashandstrobe" />
