@@ -1,10 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. Больше не DayNight — фиксируем поведение. -->
+    <!-- Shape appearance overlay: скругление для всех кнопок -->
+    <style name="ShapeAppearance.Flashandstrobe.Button" parent="ShapeAppearance.Material3.Corner.Full">
+        <!-- Делаем сильное скругление (можно уменьшить до 16dp, если покажется слишком круглым) -->
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <!-- Стиль для кнопки: фиксируем minHeight, чтобы кнопки были крупнее -->
+    <style name="Widget.Flashandstrobe.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">56dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Flashandstrobe.Button</item>
+    </style>
+
+    <!-- Base application theme -->
     <style name="Base.Theme.Flashandstrobe" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Привязываем цвета к твоим ресурсам, если Material3 их требует -->
         <item name="android:windowBackground">@color/background_dark</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
-        <!-- Если нужно, можно явно задать и другие атрибуты Material3, но пока хватит этого -->
+        <!-- Подключаем наш стиль кнопок ко всему приложению -->
+        <item name="buttonStyle">@style/Widget.Flashandstrobe.Button</item>
     </style>
 
     <style name="Theme.Flashandstrobe" parent="Base.Theme.Flashandstrobe" />
