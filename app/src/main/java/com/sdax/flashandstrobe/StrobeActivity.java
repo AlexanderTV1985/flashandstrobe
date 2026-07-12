@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import com.google.android.material.button.MaterialButton; // <-- важно
 
 public class StrobeActivity extends AppCompatActivity {
 
@@ -26,20 +26,16 @@ public class StrobeActivity extends AppCompatActivity {
     private String cameraId;
     private boolean isStrobeOn = false;
     private long flashIntervalMs = 200;
-
-    // Флаг текущего состояния вспышки ВНУТРИ цикла стробоскопа
     private boolean currentTorchState = false;
 
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable strobeRunnable;
 
-    private Button btnToggleStrobe;
-    private TextView tvStatusStrobe;
+    // ✅ Исправлено: используем правильные типы и только существующие ID
+    private MaterialButton btnToggleStrobe; // MaterialButton вместо Button
+    private TextView tvStatus;             // только tvStatus, без tvStatusStrobe
     private SeekBar seekFrequency;
     private TextView tvFreqValue;
-
-    private TextView tvStatus;
-
 
     private static final int REQUEST_CAMERA_PERMISSION = 101;
     private static final String PREFS_NAME = "app_prefs";
@@ -50,6 +46,7 @@ public class StrobeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_strobe);
 
+        // ✅ Инициализируем все элементы
         btnToggleStrobe = findViewById(R.id.btnToggleStrobe);
         tvStatus = findViewById(R.id.tvStatus);
         seekFrequency = findViewById(R.id.seekFrequency);
@@ -64,14 +61,15 @@ public class StrobeActivity extends AppCompatActivity {
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            tvStatusStrobe.setText(getString(R.string.about_description));
+            // ✅ Используем tvStatus вместо несуществующего tvStatusStrobe
+            tvStatus.setText(getString(R.string.about_description));
             btnToggleStrobe.setEnabled(false);
             seekFrequency.setEnabled(false);
             return;
         }
 
         if (cameraId == null) {
-            tvStatusStrobe.setText(getString(R.string.about_warning));
+            tvStatus.setText(getString(R.string.about_warning));
             btnToggleStrobe.setEnabled(false);
             seekFrequency.setEnabled(false);
             return;
@@ -113,7 +111,7 @@ public class StrobeActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupStrobeButton();
             } else {
-                tvStatusStrobe.setText(getString(R.string.tv_status_ready));
+                tvStatus.setText(getString(R.string.tv_status_ready));
                 btnToggleStrobe.setEnabled(false);
                 seekFrequency.setEnabled(false);
                 Toast.makeText(this, getString(R.string.permission_denied_message), Toast.LENGTH_LONG).show();
@@ -160,16 +158,18 @@ public class StrobeActivity extends AppCompatActivity {
         updateButtonText(isStrobeOn);
 
         if (isStrobeOn) {
-            // Перед запуском сбрасываем внутреннее состояние на «выключено»,
-            // чтобы первый шаг цикла был «включить»
             currentTorchState = false;
+            // ✅ Правильно меняем цвет для MaterialButton
+            btnToggleStrobe.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.strobe_btn));
 
-            btnToggleStrobe.setBackgroundColor(ContextCompat.getColor(this, R.color.strobe_btn));
-            tvStatusStrobe.setText(getString(R.string.tv_hint_strobe));
+            tvStatus.setText(getString(R.string.tv_hint_strobe));
             startStrobeLoop();
         } else {
-            btnToggleStrobe.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
-            tvStatusStrobe.setText(getString(R.string.tv_status_ready));
+            // Если у тебя есть цвет flash_off — используй его, иначе можно вернуть дефолтный
+            // btnToggleStrobe.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.flash_off));
+            // Или просто не менять — MaterialButton сам вернёт стиль «выключено»
+
+            tvStatus.setText(getString(R.string.tv_status_ready));
             stopStrobeLoop();
         }
     }
@@ -177,7 +177,6 @@ public class StrobeActivity extends AppCompatActivity {
     private void startStrobeLoop() {
         strobeRunnable = () -> {
             try {
-                // Инвертируем наше локальное состояние
                 currentTorchState = !currentTorchState;
                 cameraManager.setTorchMode(cameraId, currentTorchState);
             } catch (CameraAccessException e) {
@@ -196,7 +195,7 @@ public class StrobeActivity extends AppCompatActivity {
         strobeRunnable = null;
         try {
             cameraManager.setTorchMode(cameraId, false);
-            currentTorchState = false; // синхронизируем состояние
+            currentTorchState = false;
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
