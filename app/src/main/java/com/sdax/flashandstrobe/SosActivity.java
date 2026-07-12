@@ -124,20 +124,21 @@ public class SosActivity extends AppCompatActivity {
         if (!hasFlash || cameraId == null) return;
 
         isSosActive = !isSosActive;
-        updateButtonText(isSosActive);
+        updateButtonText(isSosActive); // Меняем только текст кнопки
 
         if (isSosActive) {
-            // Включаем режим SOS
-            btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.sos_btn));
+            // ВКЛЮЧАЕМ SOS
             tvStatus.setText(getString(R.string.tv_hint_sos));
             startSosPattern();
+            // УБРАЛИ: btnToggleSos.setBackgroundColor(...)
         } else {
-            // Выключаем SOS
+            // ВЫКЛЮЧАЕМ SOS
             stopSos();
-            btnToggleSos.setBackgroundColor(ContextCompat.getColor(this, R.color.flash_off));
             tvStatus.setText(getString(R.string.tv_status_ready));
+            // УБРАЛИ: btnToggleSos.setBackgroundColor(...) - цвет остаётся красным из XML
         }
     }
+
 
     private void startSosPattern() {
         // Паттерн SOS: · · · — — — · · ·
