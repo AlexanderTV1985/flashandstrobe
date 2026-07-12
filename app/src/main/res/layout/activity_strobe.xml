@@ -24,7 +24,7 @@
         android:id="@+id/btnToggleStrobe"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="300dp"
+        android:layout_marginBottom="350dp"
         android:backgroundTint="@color/strobe_btn"
         android:minHeight="120dp"
         android:text="@string/btn_strobe"
