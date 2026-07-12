@@ -2,18 +2,20 @@ package com.sdax.flashandstrobe;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// Используем MaterialButton, чтобы типы совпадали с XML
+import com.google.android.material.button.MaterialButton;
+
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnFlashlight;
-    private Button btnStrobe;
-    private Button btnSos;
-    private Button btnFlicker;
-    private Button btnAbout;
+    private MaterialButton btnFlashlight;
+    private MaterialButton btnStrobe;
+    private MaterialButton btnSos;
+    private MaterialButton btnFlicker;
+    private MaterialButton btnAbout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +29,8 @@ public class MainActivity extends AppCompatActivity {
         btnFlicker = findViewById(R.id.btnFlicker);
         btnAbout = findViewById(R.id.btnAbout);
 
-        // Установка текстов из ресурсов (чтобы можно было локализовать)
-        if (btnFlashlight != null) btnFlashlight.setText(getString(R.string.btn_flashlight));
-        if (btnStrobe != null) btnStrobe.setText(getString(R.string.btn_strobe));
-        if (btnSos != null) btnSos.setText(getString(R.string.btn_sos));
-        if (btnFlicker != null) btnFlicker.setText(getString(R.string.btn_flicker));
-        if (btnAbout != null) btnAbout.setText(getString(R.string.btn_about));
+        // Тексты уже заданы в XML через @string, поэтому setText здесь не нужен.
+        // Если захочешь менять текст динамически — тогда используй setText.
 
         // Обработчики нажатий
         setOnClickListener(btnFlashlight, FlashlightActivity.class);
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Вспомогательный метод: вешает startActivity на кнопку, если она не null.
      */
-    private void setOnClickListener(Button button, Class<?> targetActivity) {
+    private void setOnClickListener(MaterialButton button, Class<?> targetActivity) {
         if (button == null) return;
 
         button.setOnClickListener(v -> {

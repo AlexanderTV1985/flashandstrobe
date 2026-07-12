@@ -11,8 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.28" />
+        app:layout_constraintGuide_percent="0.2" />
 
+    <!-- Кнопка Flashlight -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFlashlight"
         android:layout_width="0dp"
@@ -21,12 +22,24 @@
         android:backgroundTint="@color/flash_on"
         android:text="@string/btn_flashlight"
         android:textColor="@color/text_primary"
+        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
         app:layout_constraintTop_toTopOf="@+id/guidelineCenter"
-        app:layout_constraintBottom_toTopOf="@id/btnStrobe"
+        app:layout_constraintBottom_toTopOf="@id/space1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Отступ 16dp -->
+    <Space
+        android:id="@+id/space1"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnFlashlight"
+        app:layout_constraintBottom_toTopOf="@id/btnStrobe"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Кнопка Strobe -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStrobe"
         android:layout_width="0dp"
@@ -35,13 +48,24 @@
         android:text="@string/btn_strobe"
         android:backgroundTint="@color/strobe_btn"
         android:textColor="@color/strobe_text"
-        android:layout_marginTop="16dp"
+        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/btnFlashlight"
+        app:layout_constraintTop_toBottomOf="@id/space1"
+        app:layout_constraintBottom_toTopOf="@id/space2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Отступ 16dp -->
+    <Space
+        android:id="@+id/space2"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnStrobe"
         app:layout_constraintBottom_toTopOf="@id/btnSos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Кнопка SOS -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSos"
         android:layout_width="0dp"
@@ -50,13 +74,24 @@
         android:text="@string/btn_sos"
         android:backgroundTint="@color/sos_btn"
         android:textColor="@color/sos_text"
-        android:layout_marginTop="16dp"
+        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/btnStrobe"
+        app:layout_constraintTop_toBottomOf="@id/space2"
+        app:layout_constraintBottom_toTopOf="@id/space3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Отступ 16dp -->
+    <Space
+        android:id="@+id/space3"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSos"
         app:layout_constraintBottom_toTopOf="@id/btnFlicker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Кнопка Flicker -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFlicker"
         android:layout_width="0dp"
@@ -65,25 +100,35 @@
         android:text="@string/btn_flicker"
         android:backgroundTint="@color/flicker_btn"
         android:textColor="@color/flicker_text"
-        android:layout_marginTop="16dp"
+        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/btnSos"
+        app:layout_constraintTop_toBottomOf="@id/space3"
+        app:layout_constraintBottom_toTopOf="@id/space4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Отступ 16dp -->
+    <Space
+        android:id="@+id/space4"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnFlicker"
         app:layout_constraintBottom_toTopOf="@id/btnAbout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Кнопка About -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAbout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minWidth="0dp"
         android:minHeight="?attr/actionBarSize"
         android:text="@string/btn_about"
-        android:backgroundTint="#444444"
-        android:textColor="@color/text_primary"
-        android:layout_marginTop="32dp"
-        app:cornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/btnFlicker"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:backgroundTint="@color/about_btn"
+    android:textColor="@color/about_text"
+    app:layout_constraintWidth_percent="0.5"
+    app:cornerRadius="12dp"
+    app:layout_constraintTop_toBottomOf="@id/space4"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

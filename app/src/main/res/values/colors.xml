@@ -14,12 +14,16 @@
     <color name="strobe_text">#000000</color>       <!-- Чёрный текст на кнопке стробоскопа (для контраста) -->
 
     <!-- SOS -->
-    <color name="sos_btn">#FF5722</color>            <!-- Оранжево‑красный для кнопки SOS -->
+    <color name="sos_btn">#FF000D</color>            <!-- Красный для кнопки SOS -->
     <color name="sos_text">#FFFFFF</color>          <!-- Белый текст на кнопке SOS -->
 
     <!-- Flicker («Космический шум») -->
     <color name="flicker_btn">#8BC34A</color>        <!-- Мягкий зелёный — ассоциация с «помехами/экраном» -->
     <color name="flicker_text">#000000</color>      <!-- Чёрный текст для контраста на зелёном -->
+
+    <!-- About -->
+    <color name="about_btn">#444444</color>         <!-- Тёмно‑серый для кнопки About (как в макете) -->
+    <color name="about_text">@color/text_primary</color>
 
     <!-- Цвета для AboutActivity -->
     <color name="about_bg">@color/background_dark</color>
