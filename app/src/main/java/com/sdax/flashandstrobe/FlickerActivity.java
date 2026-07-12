@@ -9,9 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.button.MaterialButton;
+import android.content.res.ColorStateList;
 
 import java.util.Random;
 
@@ -29,8 +29,9 @@ public class FlickerActivity extends AppCompatActivity {
     private boolean isFlickerActive = false;
     private boolean hasFlash = false;
 
-    private Button btnToggleFlicker;
-    private TextView tvStatus;
+    // ИЗМЕНЕНО: используем MaterialButton вместо Button
+    private MaterialButton btnToggleFlicker;
+    private android.widget.TextView tvStatus;
 
     // Базовые диапазоны длительности вспышки
     private static final int MIN_FLASH_DURATION = 80;
@@ -164,6 +165,10 @@ public class FlickerActivity extends AppCompatActivity {
         } else {
             stopFlickering();
             tvStatus.setText(getString(R.string.tv_status_ready));
+            // Возвращаем яркий цвет кнопки, когда режим выключен
+            btnToggleFlicker.setBackgroundTintList(
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flicker_btn))
+            );
         }
     }
 
@@ -171,11 +176,25 @@ public class FlickerActivity extends AppCompatActivity {
         flickerRunnable = () -> {
             try {
                 cameraManager.setTorchMode(cameraId, true);
+
+                // --- ПУЛЬСАЦИЯ ЦВЕТА КНОПКИ В ТАКТ ВСПЫШКЕ ---
+                btnToggleFlicker.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(FlickerActivity.this, R.color.flicker_btn))
+                );
+                // ----------------------------------------------------
+
                 int flashDuration = random.nextInt(MAX_FLASH_DURATION - MIN_FLASH_DURATION + 1) + MIN_FLASH_DURATION;
 
                 handler.postDelayed(() -> {
                     try {
                         cameraManager.setTorchMode(cameraId, false);
+
+                        // --- ПУЛЬСАЦИЯ ЦВЕТА КНОПКИ: ТЁМНЫЙ ОТТЕНОК ---
+                        btnToggleFlicker.setBackgroundTintList(
+                                ColorStateList.valueOf(ContextCompat.getColor(FlickerActivity.this, R.color.flicker_btn_dim))
+                        );
+                        // -----------------------------------------------
+
                         int pause;
                         // Чередуем режимы пауз для более «случайного» эффекта
                         if (random.nextBoolean()) {

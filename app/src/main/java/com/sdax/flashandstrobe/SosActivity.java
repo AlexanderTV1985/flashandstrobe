@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+// Важно: используем MaterialButton, а не обычный Button
+import com.google.android.material.button.MaterialButton;
+import android.content.res.ColorStateList;
+
 public class SosActivity extends AppCompatActivity {
 
     private CameraManager cameraManager;
@@ -25,7 +28,8 @@ public class SosActivity extends AppCompatActivity {
     private boolean isSosActive = false;
     private boolean hasFlash = false;
 
-    private Button btnToggleSos;
+    // Изменили тип на MaterialButton
+    private MaterialButton btnToggleSos;
     private TextView tvStatus;
     private TextView tvHint;
 
@@ -135,7 +139,10 @@ public class SosActivity extends AppCompatActivity {
             // ВЫКЛЮЧАЕМ SOS
             stopSos();
             tvStatus.setText(getString(R.string.tv_status_ready));
-            // УБРАЛИ: btnToggleSos.setBackgroundColor(...) - цвет остаётся красным из XML
+            // Возвращаем яркий цвет, когда режим выключен
+            btnToggleSos.setBackgroundTintList(
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.sos_btn))
+            );
         }
     }
 
@@ -181,6 +188,16 @@ public class SosActivity extends AppCompatActivity {
                     tvStatus.setText(getString(R.string.about_author)); // или спец. строка «Ошибка вспышки»
                     return;
                 }
+
+                // --- СИНХРОНИЗАЦИЯ ЦВЕТА КНОПКИ В ТАКТ ВСПЫШКЕ ---
+                int colorRes = turnOn
+                        ? R.color.sos_btn       // Яркий красный при вспышке
+                        : R.color.sos_btn_dim;  // Тёмный красный при паузе
+
+                btnToggleSos.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(SosActivity.this, colorRes))
+                );
+                // ----------------------------------------------------
 
                 index++;
                 handler.postDelayed(this, duration);

@@ -18,7 +18,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.google.android.material.button.MaterialButton; // <-- важно
+
+import com.google.android.material.button.MaterialButton;
 
 public class StrobeActivity extends AppCompatActivity {
 
@@ -31,9 +32,8 @@ public class StrobeActivity extends AppCompatActivity {
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable strobeRunnable;
 
-    // ✅ Исправлено: используем правильные типы и только существующие ID
-    private MaterialButton btnToggleStrobe; // MaterialButton вместо Button
-    private TextView tvStatus;             // только tvStatus, без tvStatusStrobe
+    private MaterialButton btnToggleStrobe;
+    private TextView tvStatus;
     private SeekBar seekFrequency;
     private TextView tvFreqValue;
 
@@ -46,7 +46,6 @@ public class StrobeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_strobe);
 
-        // ✅ Инициализируем все элементы
         btnToggleStrobe = findViewById(R.id.btnToggleStrobe);
         tvStatus = findViewById(R.id.tvStatus);
         seekFrequency = findViewById(R.id.seekFrequency);
@@ -61,7 +60,6 @@ public class StrobeActivity extends AppCompatActivity {
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            // ✅ Используем tvStatus вместо несуществующего tvStatusStrobe
             tvStatus.setText(getString(R.string.about_description));
             btnToggleStrobe.setEnabled(false);
             seekFrequency.setEnabled(false);
@@ -75,7 +73,6 @@ public class StrobeActivity extends AppCompatActivity {
             return;
         }
 
-        // Настройка ползунка частоты
         seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -89,7 +86,6 @@ public class StrobeActivity extends AppCompatActivity {
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        // Запрос разрешения на камеру
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -120,7 +116,21 @@ public class StrobeActivity extends AppCompatActivity {
     }
 
     private void setupStrobeButton() {
-        btnToggleStrobe.setOnClickListener(v -> tryStartStrobe());
+        btnToggleStrobe.setOnClickListener(v -> {
+            // Анимация «подпрыгивания» как в SOS
+            v.animate()
+                    .scaleX(1.06f)
+                    .scaleY(1.06f)
+                    .setDuration(100)
+                    .withEndAction(() -> v.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(60)
+                            .start())
+                    .start();
+
+            tryStartStrobe();
+        });
         updateButtonText(isStrobeOn);
     }
 
@@ -159,18 +169,19 @@ public class StrobeActivity extends AppCompatActivity {
 
         if (isStrobeOn) {
             currentTorchState = false;
-            // ✅ Правильно меняем цвет для MaterialButton
-            btnToggleStrobe.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.strobe_btn));
-
             tvStatus.setText(getString(R.string.tv_hint_strobe));
+
+            btnToggleStrobe.setBackgroundTintList(
+                    ContextCompat.getColorStateList(this, R.color.strobe_btn)
+            );
             startStrobeLoop();
         } else {
-            // Если у тебя есть цвет flash_off — используй его, иначе можно вернуть дефолтный
-            // btnToggleStrobe.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.flash_off));
-            // Или просто не менять — MaterialButton сам вернёт стиль «выключено»
-
             tvStatus.setText(getString(R.string.tv_status_ready));
             stopStrobeLoop();
+
+            btnToggleStrobe.setBackgroundTintList(
+                    ContextCompat.getColorStateList(this, R.color.strobe_btn)
+            );
         }
     }
 
@@ -179,6 +190,14 @@ public class StrobeActivity extends AppCompatActivity {
             try {
                 currentTorchState = !currentTorchState;
                 cameraManager.setTorchMode(cameraId, currentTorchState);
+
+                int colorRes = currentTorchState
+                        ? R.color.strobe_btn
+                        : R.color.strobe_btn_dim;
+
+                btnToggleStrobe.setBackgroundTintList(
+                        ContextCompat.getColorStateList(StrobeActivity.this, colorRes)
+                );
             } catch (CameraAccessException e) {
                 e.printStackTrace();
                 stopStrobeLoop();

@@ -6,23 +6,23 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import com.google.android.material.button.MaterialButton;
+import android.content.res.ColorStateList;
 
 public class FlashlightActivity extends AppCompatActivity {
 
     private CameraManager cameraManager;
     private String cameraId;
     private boolean isFlashOn = false;
-    private Button btnToggleFlash;
-    private TextView tvStatus;
+
+    // ИЗМЕНЕНО: используем MaterialButton вместо Button
+    private MaterialButton btnToggleFlash;
+    private android.widget.TextView tvStatus;
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
 
@@ -95,11 +95,10 @@ public class FlashlightActivity extends AppCompatActivity {
     }
 
     private void updateButtonText(boolean isOn) {
-        Button btn = findViewById(R.id.btnToggleFlash);
         if (isOn) {
-            btn.setText(getString(R.string.btn_flash_off));
+            btnToggleFlash.setText(getString(R.string.btn_flash_off));
         } else {
-            btn.setText(getString(R.string.btn_flash_on));
+            btnToggleFlash.setText(getString(R.string.btn_flash_on));
         }
     }
 
@@ -113,13 +112,15 @@ public class FlashlightActivity extends AppCompatActivity {
 
             if (isFlashOn) {
                 tvStatus.setText(getString(R.string.tv_hint_flash));
-                btnToggleFlash.setBackgroundColor(
-                        ContextCompat.getColor(this, R.color.flash_on)
+                // ЯРКИЙ ЦВЕТ при включённой вспышке
+                btnToggleFlash.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flash_on))
                 );
             } else {
                 tvStatus.setText(getString(R.string.tv_status_ready));
-                btnToggleFlash.setBackgroundColor(
-                        ContextCompat.getColor(this, R.color.flash_off)
+                // ТЁМНЫЙ/ПРИГЛУШЁННЫЙ ЦВЕТ при выключенной вспышке
+                btnToggleFlash.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flash_off))
                 );
             }
         } catch (CameraAccessException e) {

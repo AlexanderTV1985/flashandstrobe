@@ -31,6 +31,8 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:cornerRadius="16dp"
+        app:elevation="4dp"
+        app:rippleColor="#80FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
