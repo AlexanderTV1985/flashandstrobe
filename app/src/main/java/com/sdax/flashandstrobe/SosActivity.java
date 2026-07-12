@@ -224,4 +224,5 @@ public class SosActivity extends AppCompatActivity {
         super.onDestroy();
         stopSos();
     }
+
 }

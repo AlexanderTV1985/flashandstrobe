@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Общие -->
+    <color name="background_dark">#2B2B2B</color>   <!-- Тёмный фон экрана -->
+    <color name="text_primary">#FFFFFF</color>       <!-- Основной белый текст -->
+    <color name="text_hint">#AAAAAA</color>          <!-- Вспомогательный серый текст -->
+
+
     <!-- Фонарик -->
     <color name="flash_on">#FF5722</color>        <!-- Оранжево‑красный: фонарик включён -->
     <color name="flash_off">#FFC107</color>      <!-- Жёлтый: кнопка в режиме «выключено» -->
     <!-- Новый цвет: тёмный оттенок для эффекта пульсации кнопки в такт вспышке -->
     <color name="flash_btn_dim">#6A3501</color>
 
-    <!-- Общие -->
-    <color name="background_dark">#2B2B2B</color>   <!-- Тёмный фон экрана -->
-    <color name="text_primary">#FFFFFF</color>       <!-- Основной белый текст -->
-    <color name="text_hint">#AAAAAA</color>          <!-- Вспомогательный серый текст -->
 
-    <!-- Стробоскоп -->
+        <!-- Стробоскоп -->
     <color name="strobe_btn">#FFEB3B</color>         <!-- Яркий жёлтый (когда вспышка горит) -->
     <color name="strobe_text">#000000</color>      <!-- Чёрный текст -->
     <color name="strobe_btn_dim">#6A6C01</color>     <!-- Чуть приглушённый жёлтый (когда вспышка гаснет) -->
