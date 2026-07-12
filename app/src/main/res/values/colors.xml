@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Общие -->
-    <color name="background_dark">#2B2B2B</color>   <!-- Тёмный фон экрана -->
+    <color name="background_dark">#121212</color>   <!-- Тёмный фон экрана -->
     <color name="text_primary">#FFFFFF</color>       <!-- Основной белый текст -->
     <color name="text_hint">#AAAAAA</color>          <!-- Вспомогательный серый текст -->
 

@@ -24,7 +24,7 @@
 
     <!-- Статусы и подсказки -->
     <string name="tv_status_ready">Готов к работе</string>
-    <string name="tv_hint_flash">Нажмите кнопку, чтобы включить фонарик</string>
+    <string name="tv_hint_flash">Нажмите кнопку, чтобы выключить фонарик</string>
     <string name="tv_hint_sos">SOS: · · · — — — · · ·</string>
     <string name="tv_hint_flicker">Режим космического шума: случайные вспышки</string>
     <string name="tv_hint_strobe">Регулируйте частоту вспышек ползунком</string>
@@ -36,11 +36,9 @@
     <string name="about_warning">⚠️ Длительное мерцание может быть небезопасным при склонности к светочувствительной эпилепсии. Используйте с осторожностью.</string>
     <string name="about_author">Автор: SDax</string>
     <string name="about_license">Лицензия: MIT</string>
+    <string name="about_build_status">Сборка: Beta (только для тестирования)</string>
 
-    <!-- Стробоскоп: частота -->
-    <string name="tv_freq_value_format">Частота: %1$d Гц</string>
-
-    <!-- Сообщения об ошибках и правах -->
+    <!-- Ошибки и системные сообщения -->
     <string name="permission_denied_message">Требуется разрешение на использование камеры</string>
     <string name="flash_error_message">Ошибка управления вспышкой</string>
 </resources>

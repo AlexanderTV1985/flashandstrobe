@@ -42,7 +42,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.8" />
 
-
     <SeekBar
         android:id="@+id/seekFrequency"
         android:layout_width="0dp"
@@ -55,16 +54,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.8" />
 
+    <!-- ИСПРАВЛЕНО: привязка к seekFrequency вместо жёсткого marginBottom -->
     <TextView
         android:id="@+id/tvFreqValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
         android:text="10 Гц"
         android:textColor="@color/text_hint"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seekFrequency"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="12dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

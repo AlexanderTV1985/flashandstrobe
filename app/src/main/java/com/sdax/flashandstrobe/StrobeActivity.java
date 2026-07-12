@@ -73,13 +73,19 @@ public class StrobeActivity extends AppCompatActivity {
             return;
         }
 
+        // Начальное значение частоты
+        int initialHz = (int) (1000.0 / flashIntervalMs);
+        tvFreqValue.setText(String.format("%d Гц", initialHz));
+
         seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 flashIntervalMs = 300 - (progress * 13);
                 if (flashIntervalMs < 50) flashIntervalMs = 50;
                 int hz = (int) (1000.0 / flashIntervalMs);
-                tvFreqValue.setText(getString(R.string.tv_freq_value_format, hz));
+
+                // ПРАВИЛЬНО: String.format вместо getString(R.string...)
+                tvFreqValue.setText(String.format("%d Гц", hz));
             }
 
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -117,7 +123,6 @@ public class StrobeActivity extends AppCompatActivity {
 
     private void setupStrobeButton() {
         btnToggleStrobe.setOnClickListener(v -> {
-            // Анимация «подпрыгивания» как в SOS
             v.animate()
                     .scaleX(1.06f)
                     .scaleY(1.06f)

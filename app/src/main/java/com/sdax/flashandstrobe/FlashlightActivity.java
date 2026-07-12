@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import android.content.res.ColorStateList;
 
+
 public class FlashlightActivity extends AppCompatActivity {
 
     private CameraManager cameraManager;

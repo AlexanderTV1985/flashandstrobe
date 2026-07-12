@@ -61,6 +61,16 @@
             android:text="@string/about_author"
             android:textColor="@color/about_muted"/>
 
+        <!-- Статус сборки: Beta (только для тестирования) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_build_status"
+            android:textColor="#AAFFFFFF"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
