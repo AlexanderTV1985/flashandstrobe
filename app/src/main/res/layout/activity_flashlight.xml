@@ -16,9 +16,12 @@
         android:text="@string/tv_status_ready"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:minHeight="56dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleFlash"
