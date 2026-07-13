@@ -6,28 +6,32 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
+    <!-- tvStatus: фиксируем высоту как процент от экрана -->
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:padding="16dp"
         android:text="@string/tv_status_ready"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:gravity="center"
+        android:ellipsize="end"
+        android:maxLines="3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnToggleStrobe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintHeight_percent="0.22" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleStrobe"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
-        android:backgroundTint="@color/strobe_btn"
         android:text="@string/btn_strobe"
+        android:backgroundTint="@color/strobe_btn"
         android:textColor="@color/strobe_text"
         android:textSize="18sp"
         android:textStyle="bold"
