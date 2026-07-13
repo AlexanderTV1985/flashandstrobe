@@ -32,15 +32,10 @@ public class FlickerActivity extends AppCompatActivity {
     private MaterialButton btnToggleFlicker;
     private android.widget.TextView tvStatus;
 
-    // Базовые диапазоны длительности вспышки
     private static final int MIN_FLASH_DURATION = 80;
     private static final int MAX_FLASH_DURATION = 250;
-
-    // Для «редких помех» — большие паузы
     private static final int RARE_MIN_PAUSE = 400;
     private static final int RARE_MAX_PAUSE = 1200;
-
-    // Для «плотного шума» — маленькие паузы
     private static final int DENSE_MIN_PAUSE = 100;
     private static final int DENSE_MAX_PAUSE = 300;
 
@@ -49,7 +44,7 @@ public class FlickerActivity extends AppCompatActivity {
     private Random random = new Random();
 
     private static final int REQUEST_CAMERA_PERMISSION = 102;
-    private static final int REQUEST_WARNING_DIALOG = 1001; // код запроса для WarningActivity
+    private static final int REQUEST_WARNING_DIALOG = 1001;
 
     private static final String PREFS_NAME = "app_prefs";
     private static final String KEY_FLICKER_WARNING_SHOWN = "flicker_warning_shown";
@@ -94,7 +89,6 @@ public class FlickerActivity extends AppCompatActivity {
             return;
         }
 
-        // Запрос разрешения на камеру
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -200,6 +194,7 @@ public class FlickerActivity extends AppCompatActivity {
                         } else {
                             pause = random.nextInt(DENSE_MAX_PAUSE - DENSE_MIN_PAUSE + 1) + DENSE_MIN_PAUSE;
                         }
+
                         if (isFlickerActive) {
                             handler.postDelayed(flickerRunnable, pause);
                         }
@@ -226,7 +221,9 @@ public class FlickerActivity extends AppCompatActivity {
             flickerRunnable = null;
         }
         try {
-            cameraManager.setTorchMode(cameraId, false);
+            if (cameraId != null) {
+                cameraManager.setTorchMode(cameraId, false);
+            }
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }

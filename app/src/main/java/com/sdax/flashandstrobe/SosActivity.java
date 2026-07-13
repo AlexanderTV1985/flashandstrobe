@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-// Важно: используем MaterialButton, а не обычный Button
 import com.google.android.material.button.MaterialButton;
 import android.content.res.ColorStateList;
 
@@ -28,12 +27,10 @@ public class SosActivity extends AppCompatActivity {
     private boolean isSosActive = false;
     private boolean hasFlash = false;
 
-    // Изменили тип на MaterialButton
     private MaterialButton btnToggleSos;
     private TextView tvStatus;
     private TextView tvHint;
 
-    // Тайминги (мс)
     private static final int DOT = 150;
     private static final int DASH = 450;
     private static final int PAUSE_BETWEEN_SIGNALS = 150;
@@ -55,7 +52,6 @@ public class SosActivity extends AppCompatActivity {
 
         cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
 
-        // Поиск камеры со вспышкой (исправлено)
         try {
             String[] cameraIds = cameraManager.getCameraIdList();
             if (cameraIds != null) {
@@ -71,18 +67,17 @@ public class SosActivity extends AppCompatActivity {
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            tvStatus.setText(getString(R.string.about_description)); // или отдельная строка «Ошибка доступа к камере»
+            tvStatus.setText(getString(R.string.about_description));
             btnToggleSos.setEnabled(false);
             return;
         }
 
         if (!hasFlash || cameraId == null) {
-            tvStatus.setText(getString(R.string.about_warning)); // или отдельная строка «Нет вспышки»
+            tvStatus.setText(getString(R.string.about_warning));
             btnToggleSos.setEnabled(false);
             return;
         }
 
-        // Запрос прав
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -128,27 +123,21 @@ public class SosActivity extends AppCompatActivity {
         if (!hasFlash || cameraId == null) return;
 
         isSosActive = !isSosActive;
-        updateButtonText(isSosActive); // Меняем только текст кнопки
+        updateButtonText(isSosActive);
 
         if (isSosActive) {
-            // ВКЛЮЧАЕМ SOS
             tvStatus.setText(getString(R.string.tv_hint_sos));
             startSosPattern();
-            // УБРАЛИ: btnToggleSos.setBackgroundColor(...)
         } else {
-            // ВЫКЛЮЧАЕМ SOS
             stopSos();
             tvStatus.setText(getString(R.string.tv_status_ready));
-            // Возвращаем яркий цвет, когда режим выключен
             btnToggleSos.setBackgroundTintList(
                     ColorStateList.valueOf(ContextCompat.getColor(this, R.color.sos_btn))
             );
         }
     }
 
-
     private void startSosPattern() {
-        // Паттерн SOS: · · · — — — · · ·
         int[] pattern = {
                 DOT, PAUSE_BETWEEN_SIGNALS,
                 DOT, PAUSE_BETWEEN_SIGNALS,
@@ -160,7 +149,7 @@ public class SosActivity extends AppCompatActivity {
 
                 DOT, PAUSE_BETWEEN_SIGNALS,
                 DOT, PAUSE_BETWEEN_SIGNALS,
-                DOT, 1000 // пауза в конце цикла перед повторением
+                DOT, 1000
         };
 
         sosRunnable = new Runnable() {
@@ -174,30 +163,28 @@ public class SosActivity extends AppCompatActivity {
                 }
 
                 if (index >= pattern.length) {
-                    index = 0; // цикл повторяется
+                    index = 0;
                 }
 
                 int duration = pattern[index];
-                boolean turnOn = (index % 2 == 0); // чётные индексы — вспышка ВКЛ
+                boolean turnOn = (index % 2 == 0);
 
                 try {
                     cameraManager.setTorchMode(cameraId, turnOn);
                 } catch (CameraAccessException e) {
                     e.printStackTrace();
                     stopSos();
-                    tvStatus.setText(getString(R.string.about_author)); // или спец. строка «Ошибка вспышки»
+                    tvStatus.setText(getString(R.string.about_author));
                     return;
                 }
 
-                // --- СИНХРОНИЗАЦИЯ ЦВЕТА КНОПКИ В ТАКТ ВСПЫШКЕ ---
                 int colorRes = turnOn
-                        ? R.color.sos_btn       // Яркий красный при вспышке
-                        : R.color.sos_btn_dim;  // Тёмный красный при паузе
+                        ? R.color.sos_btn
+                        : R.color.sos_btn_dim;
 
                 btnToggleSos.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(SosActivity.this, colorRes))
                 );
-                // ----------------------------------------------------
 
                 index++;
                 handler.postDelayed(this, duration);

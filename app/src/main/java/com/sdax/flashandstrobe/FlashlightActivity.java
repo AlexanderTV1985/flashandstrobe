@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.google.android.material.button.MaterialButton;
 import android.content.res.ColorStateList;
-
 
 public class FlashlightActivity extends AppCompatActivity {
 
@@ -21,7 +21,6 @@ public class FlashlightActivity extends AppCompatActivity {
     private String cameraId;
     private boolean isFlashOn = false;
 
-    // ИЗМЕНЕНО: используем MaterialButton вместо Button
     private MaterialButton btnToggleFlash;
     private android.widget.TextView tvStatus;
 
@@ -113,13 +112,11 @@ public class FlashlightActivity extends AppCompatActivity {
 
             if (isFlashOn) {
                 tvStatus.setText(getString(R.string.tv_hint_flash));
-                // ЯРКИЙ ЦВЕТ при включённой вспышке
                 btnToggleFlash.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flash_on))
                 );
             } else {
                 tvStatus.setText(getString(R.string.tv_status_ready));
-                // ТЁМНЫЙ/ПРИГЛУШЁННЫЙ ЦВЕТ при выключенной вспышке
                 btnToggleFlash.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flash_off))
                 );

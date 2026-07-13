@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/tv_status_ready"
         android:textColor="@color/text_primary"
@@ -17,19 +17,19 @@
         android:gravity="center"
         android:ellipsize="end"
         android:maxLines="3"
+        android:layout_marginTop="48dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnToggleFlash"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintHeight_percent="0.22" />
+        app:layout_constraintWidth_percent="0.8" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleFlash"
         android:layout_width="0dp"
-        android:layout_height="72dp"
-        android:minHeight="48dp"
-        android:paddingVertical="8dp"
+        android:layout_height="wrap_content"
+        android:minHeight="64dp"
+        android:maxHeight="120dp"
+        android:paddingVertical="12dp"
         android:text="@string/btn_flash"
         android:backgroundTint="@color/flash_off"
         android:textColor="@color/text_primary"
@@ -39,12 +39,12 @@
         app:cornerRadius="16dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/tvStatus"
-        app:layout_constraintBottom_toTopOf="@id/tvHint"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintWidth_percent="0.8" />
 
     <TextView
         android:id="@+id/tvHint"
@@ -54,9 +54,8 @@
         android:textColor="@color/text_hint"
         android:textSize="14sp"
         android:lineHeight="20sp"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/btnToggleFlash"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

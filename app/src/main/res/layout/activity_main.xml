@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:background="@color/background_dark">
 
     <androidx.constraintlayout.widget.Guideline
@@ -14,25 +13,25 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.18" />
 
-    <!-- Кнопка Flashlight -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFlashlight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:backgroundTint="@color/flash_on"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:text="@string/btn_flashlight"
         android:textColor="@color/text_primary"
-        app:layout_constraintWidth_percent="0.8"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:cornerRadius="12dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
         app:layout_constraintTop_toTopOf="@+id/guidelineCenter"
-        app:layout_constraintBottom_toTopOf="@id/space1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
     <Space
         android:id="@+id/space1"
@@ -42,7 +41,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Кнопка Strobe -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStrobe"
         android:layout_width="0dp"
@@ -50,17 +48,18 @@
         android:minHeight="48dp"
         android:text="@string/btn_strobe"
         android:backgroundTint="@color/strobe_btn"
+        android:textColor="@color/strobe_text"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/strobe_text"
-        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/space1"
-        app:layout_constraintBottom_toTopOf="@id/space2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
     <Space
         android:id="@+id/space2"
@@ -70,7 +69,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Кнопка SOS -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSos"
         android:layout_width="0dp"
@@ -78,17 +76,18 @@
         android:minHeight="48dp"
         android:text="@string/btn_sos"
         android:backgroundTint="@color/sos_btn"
+        android:textColor="@color/sos_text"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/sos_text"
-        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/space2"
-        app:layout_constraintBottom_toTopOf="@id/space3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
     <Space
         android:id="@+id/space3"
@@ -98,7 +97,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Кнопка Flicker -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFlicker"
         android:layout_width="0dp"
@@ -106,17 +104,18 @@
         android:minHeight="48dp"
         android:text="@string/btn_flicker"
         android:backgroundTint="@color/flicker_btn"
+        android:textColor="@color/flicker_text"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/flicker_text"
-        app:layout_constraintWidth_percent="0.8"
         app:cornerRadius="12dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/space3"
-        app:layout_constraintBottom_toTopOf="@id/space4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
     <Space
         android:id="@+id/space4"
@@ -126,7 +125,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Кнопка About -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAbout"
         android:layout_width="0dp"
@@ -134,18 +132,19 @@
         android:minHeight="48dp"
         android:text="@string/btn_about"
         android:backgroundTint="@color/about_btn"
+        android:textColor="@color/about_text"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/about_text"
-        app:layout_constraintWidth_percent="0.5"
         app:cornerRadius="12dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/space4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
-    <!-- Статус сборки (Beta) -->
     <TextView
         android:id="@+id/tvBuildStatus"
         android:layout_width="0dp"
