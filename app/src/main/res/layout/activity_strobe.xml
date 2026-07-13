@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
-    <!-- tvStatus: фиксируем высоту как процент от экрана -->
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="0dp"
@@ -28,13 +27,14 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleStrobe"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:minHeight="48dp"
         android:text="@string/btn_strobe"
         android:backgroundTint="@color/strobe_btn"
         android:textColor="@color/strobe_text"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textAllCaps="false"
         app:cornerRadius="16dp"
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
