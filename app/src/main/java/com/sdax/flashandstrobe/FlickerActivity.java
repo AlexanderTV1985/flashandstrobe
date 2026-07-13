@@ -1,6 +1,6 @@
 package com.sdax.flashandstrobe;
 
-import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
@@ -9,10 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,7 +29,6 @@ public class FlickerActivity extends AppCompatActivity {
     private boolean isFlickerActive = false;
     private boolean hasFlash = false;
 
-    // ИЗМЕНЕНО: используем MaterialButton вместо Button
     private MaterialButton btnToggleFlicker;
     private android.widget.TextView tvStatus;
 
@@ -50,6 +49,8 @@ public class FlickerActivity extends AppCompatActivity {
     private Random random = new Random();
 
     private static final int REQUEST_CAMERA_PERMISSION = 102;
+    private static final int REQUEST_WARNING_DIALOG = 1001; // код запроса для WarningActivity
+
     private static final String PREFS_NAME = "app_prefs";
     private static final String KEY_FLICKER_WARNING_SHOWN = "flicker_warning_shown";
 
@@ -71,7 +72,6 @@ public class FlickerActivity extends AppCompatActivity {
                 return;
             }
 
-            // Ищем первую камеру со вспышкой
             for (String id : cameraIds) {
                 Boolean flashAvailable = cameraManager.getCameraCharacteristics(id)
                         .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE);
@@ -96,10 +96,10 @@ public class FlickerActivity extends AppCompatActivity {
 
         // Запрос разрешения на камеру
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},
+                        new String[]{android.Manifest.permission.CAMERA},
                         REQUEST_CAMERA_PERMISSION);
             } else {
                 setupFlickerButton();
@@ -141,16 +141,20 @@ public class FlickerActivity extends AppCompatActivity {
         boolean warned = prefs.getBoolean(KEY_FLICKER_WARNING_SHOWN, false);
 
         if (!warned) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.alert_title))
-                    .setMessage(getString(R.string.flicker_strobe_warning_message))
-                    .setPositiveButton(getString(android.R.string.ok), (dialog, which) -> {
-                        prefs.edit().putBoolean(KEY_FLICKER_WARNING_SHOWN, true).apply();
-                        toggleFlicker();
-                    })
-                    .setCancelable(false)
-                    .show();
+            Intent intent = new Intent(this, WarningActivity.class);
+            intent.putExtra(WarningActivity.EXTRA_ACTION, WarningActivity.ACTION_FLICKER);
+            startActivityForResult(intent, REQUEST_WARNING_DIALOG);
         } else {
+            toggleFlicker();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_WARNING_DIALOG && resultCode == RESULT_OK) {
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            prefs.edit().putBoolean(KEY_FLICKER_WARNING_SHOWN, true).apply();
             toggleFlicker();
         }
     }
@@ -165,7 +169,6 @@ public class FlickerActivity extends AppCompatActivity {
         } else {
             stopFlickering();
             tvStatus.setText(getString(R.string.tv_status_ready));
-            // Возвращаем яркий цвет кнопки, когда режим выключен
             btnToggleFlicker.setBackgroundTintList(
                     ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flicker_btn))
             );
@@ -177,11 +180,9 @@ public class FlickerActivity extends AppCompatActivity {
             try {
                 cameraManager.setTorchMode(cameraId, true);
 
-                // --- ПУЛЬСАЦИЯ ЦВЕТА КНОПКИ В ТАКТ ВСПЫШКЕ ---
                 btnToggleFlicker.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(FlickerActivity.this, R.color.flicker_btn))
                 );
-                // ----------------------------------------------------
 
                 int flashDuration = random.nextInt(MAX_FLASH_DURATION - MIN_FLASH_DURATION + 1) + MIN_FLASH_DURATION;
 
@@ -189,14 +190,11 @@ public class FlickerActivity extends AppCompatActivity {
                     try {
                         cameraManager.setTorchMode(cameraId, false);
 
-                        // --- ПУЛЬСАЦИЯ ЦВЕТА КНОПКИ: ТЁМНЫЙ ОТТЕНОК ---
                         btnToggleFlicker.setBackgroundTintList(
                                 ColorStateList.valueOf(ContextCompat.getColor(FlickerActivity.this, R.color.flicker_btn_dim))
                         );
-                        // -----------------------------------------------
 
                         int pause;
-                        // Чередуем режимы пауз для более «случайного» эффекта
                         if (random.nextBoolean()) {
                             pause = random.nextInt(RARE_MAX_PAUSE - RARE_MIN_PAUSE + 1) + RARE_MIN_PAUSE;
                         } else {

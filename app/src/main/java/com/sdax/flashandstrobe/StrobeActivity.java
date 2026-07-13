@@ -1,5 +1,6 @@
 package com.sdax.flashandstrobe;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,7 +26,6 @@ public class StrobeActivity extends AppCompatActivity {
     private CameraManager cameraManager;
     private String cameraId;
     private boolean isStrobeOn = false;
-    // Начальное значение под новый диапазон (3 Гц)
     private long flashIntervalMs = (long) (1000.0 / 3);
     private boolean currentTorchState = false;
 
@@ -39,6 +38,8 @@ public class StrobeActivity extends AppCompatActivity {
     private TextView tvFreqValue;
 
     private static final int REQUEST_CAMERA_PERMISSION = 101;
+    private static final int REQUEST_WARNING_DIALOG = 1002; // отдельный код запроса для Strobe
+
     private static final String PREFS_NAME = "app_prefs";
     private static final String KEY_STROBE_WARNING_SHOWN = "strobe_warning_shown";
 
@@ -74,21 +75,17 @@ public class StrobeActivity extends AppCompatActivity {
             return;
         }
 
-        // Настройка диапазона ползунка: 0..20 → 3..23 Гц
         seekFrequency.setMax(20);
         seekFrequency.setProgress(0);
 
-        // Начальное отображение частоты
         int initialHz = 3 + seekFrequency.getProgress();
         tvFreqValue.setText(String.format("%d Гц", initialHz));
 
         seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Каждая позиция ползунка = ровно +1 Гц
-                int hz = 3 + progress; // диапазон: 3...23 Гц
+                int hz = 3 + progress;
                 flashIntervalMs = (long) (1000.0 / hz);
-
                 tvFreqValue.setText(String.format("%d Гц", hz));
             }
 
@@ -156,16 +153,20 @@ public class StrobeActivity extends AppCompatActivity {
         boolean warned = prefs.getBoolean(KEY_STROBE_WARNING_SHOWN, false);
 
         if (!warned) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.alert_title))
-                    .setMessage(getString(R.string.flicker_strobe_warning_message))
-                    .setPositiveButton(getString(android.R.string.ok), (dialog, which) -> {
-                        prefs.edit().putBoolean(KEY_STROBE_WARNING_SHOWN, true).apply();
-                        toggleStrobe();
-                    })
-                    .setCancelable(false)
-                    .show();
+            Intent intent = new Intent(this, WarningActivity.class);
+            intent.putExtra(WarningActivity.EXTRA_ACTION, WarningActivity.ACTION_STROBE);
+            startActivityForResult(intent, REQUEST_WARNING_DIALOG);
         } else {
+            toggleStrobe();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_WARNING_DIALOG && resultCode == RESULT_OK) {
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            prefs.edit().putBoolean(KEY_STROBE_WARNING_SHOWN, true).apply();
             toggleStrobe();
         }
     }
@@ -188,6 +189,7 @@ public class StrobeActivity extends AppCompatActivity {
             tvStatus.setText(getString(R.string.tv_status_ready));
             stopStrobeLoop();
 
+            // Возвращаем кнопке «нормальный» цвет, когда режим выключен
             btnToggleStrobe.setBackgroundTintList(
                     ContextCompat.getColorStateList(this, R.color.strobe_btn)
             );
