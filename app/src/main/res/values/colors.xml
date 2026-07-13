@@ -40,4 +40,6 @@
     <color name="about_title">@color/text_primary</color>
     <color name="about_body">@color/text_primary</color>
     <color name="about_muted">@color/text_hint</color>
+
+    <color name="ic_launcher_background_color">#3D6ADC</color>
 </resources>
