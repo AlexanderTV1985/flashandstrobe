@@ -55,6 +55,7 @@
         android:textSize="14sp"
         android:lineHeight="20sp"
         android:layout_marginTop="24dp"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/btnToggleFlash"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
