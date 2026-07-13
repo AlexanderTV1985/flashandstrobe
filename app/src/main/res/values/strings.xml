@@ -17,6 +17,7 @@
     <string name="btn_flash_off">ВЫКЛЮЧИТЬ ФОНАРИК</string>
     <string name="btn_strobe_on">ВКЛЮЧИТЬ СТРОБОСКОП</string>
     <string name="btn_strobe_off">ВЫКЛЮЧИТЬ СТРОБОСКОП</string>
+    <string name="btn_flash">Фонарик</string>
     <string name="btn_sos_on">ЗАПУСТИТЬ SOS</string>
     <string name="btn_sos_off">ОСТАНОВИТЬ SOS</string>
     <string name="btn_flicker_on">ВКЛЮЧИТЬ МЕРЦАНИЕ</string>

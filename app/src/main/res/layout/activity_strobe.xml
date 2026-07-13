@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
+    <!-- 1. Статус -->
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="0dp"
@@ -22,6 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8" />
 
+    <!-- 2. Кнопка Strobe -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleStrobe"
         android:layout_width="0dp"
@@ -36,26 +38,41 @@
         app:elevation="4dp"
         app:rippleColor="#80FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/tvStatus"
-        app:layout_constraintBottom_toTopOf="@id/seekFrequency"
+        app:layout_constraintBottom_toTopOf="@id/tvHint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintVertical_bias="0.5" />
 
+    <!-- 3. Подсказка под кнопкой (как в SOS) -->
+    <TextView
+        android:id="@+id/tvHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_hint_strobe"
+        android:textColor="@color/text_hint"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/btnToggleStrobe"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- 4. Ползунок (ниже всей центральной группы) -->
     <SeekBar
         android:id="@+id/seekFrequency"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:max="50"
         android:progress="10"
-        app:layout_constraintTop_toBottomOf="@id/btnToggleStrobe"
-        app:layout_constraintBottom_toTopOf="@id/tvFreqValue"
+        app:layout_constraintTop_toBottomOf="@id/tvHint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
         android:layout_marginTop="24dp" />
 
+    <!-- 5. Текст «Гц» под ползунком -->
     <TextView
         android:id="@+id/tvFreqValue"
         android:layout_width="wrap_content"
@@ -64,7 +81,6 @@
         android:textColor="@color/text_hint"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/seekFrequency"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp" />
