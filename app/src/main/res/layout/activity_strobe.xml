@@ -27,8 +27,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleStrobe"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="72dp"
         android:minHeight="48dp"
+        android:paddingVertical="8dp"
         android:text="@string/btn_strobe"
         android:backgroundTint="@color/strobe_btn"
         android:textColor="@color/strobe_text"

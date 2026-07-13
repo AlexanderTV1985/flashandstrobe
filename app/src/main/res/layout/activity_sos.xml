@@ -27,8 +27,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnToggleSos"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="72dp"
         android:minHeight="48dp"
+        android:paddingVertical="8dp"
         android:backgroundTint="@color/sos_btn"
         android:text="@string/btn_sos"
         android:textColor="@color/sos_text"
