@@ -26,7 +26,8 @@ public class StrobeActivity extends AppCompatActivity {
     private CameraManager cameraManager;
     private String cameraId;
     private boolean isStrobeOn = false;
-    private long flashIntervalMs = 200;
+    // Начальное значение под новый диапазон (3 Гц)
+    private long flashIntervalMs = (long) (1000.0 / 3);
     private boolean currentTorchState = false;
 
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -73,18 +74,21 @@ public class StrobeActivity extends AppCompatActivity {
             return;
         }
 
-        // Начальное значение частоты
-        int initialHz = (int) (1000.0 / flashIntervalMs);
+        // Настройка диапазона ползунка: 0..20 → 3..23 Гц
+        seekFrequency.setMax(20);
+        seekFrequency.setProgress(0);
+
+        // Начальное отображение частоты
+        int initialHz = 3 + seekFrequency.getProgress();
         tvFreqValue.setText(String.format("%d Гц", initialHz));
 
         seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                flashIntervalMs = 300 - (progress * 13);
-                if (flashIntervalMs < 50) flashIntervalMs = 50;
-                int hz = (int) (1000.0 / flashIntervalMs);
+                // Каждая позиция ползунка = ровно +1 Гц
+                int hz = 3 + progress; // диапазон: 3...23 Гц
+                flashIntervalMs = (long) (1000.0 / hz);
 
-                // ПРАВИЛЬНО: String.format вместо getString(R.string...)
                 tvFreqValue.setText(String.format("%d Гц", hz));
             }
 
