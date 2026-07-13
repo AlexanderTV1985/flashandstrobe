@@ -12,16 +12,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.18" />
 
     <!-- Кнопка Flashlight -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFlashlight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="48dp"
         android:backgroundTint="@color/flash_on"
-        android:textSize="26sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:text="@string/btn_flashlight"
         android:textColor="@color/text_primary"
@@ -34,13 +34,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Отступ 16dp -->
     <Space
         android:id="@+id/space1"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="12dp"
         app:layout_constraintTop_toBottomOf="@id/btnFlashlight"
-        app:layout_constraintBottom_toTopOf="@id/btnStrobe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -49,10 +47,10 @@
         android:id="@+id/btnStrobe"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="48dp"
         android:text="@string/btn_strobe"
         android:backgroundTint="@color/strobe_btn"
-        android:textSize="26sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/strobe_text"
         app:layout_constraintWidth_percent="0.8"
@@ -64,13 +62,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Отступ 16dp -->
     <Space
         android:id="@+id/space2"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="12dp"
         app:layout_constraintTop_toBottomOf="@id/btnStrobe"
-        app:layout_constraintBottom_toTopOf="@id/btnSos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -79,10 +75,10 @@
         android:id="@+id/btnSos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="48dp"
         android:text="@string/btn_sos"
         android:backgroundTint="@color/sos_btn"
-        android:textSize="26sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/sos_text"
         app:layout_constraintWidth_percent="0.8"
@@ -94,13 +90,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Отступ 16dp -->
     <Space
         android:id="@+id/space3"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="12dp"
         app:layout_constraintTop_toBottomOf="@id/btnSos"
-        app:layout_constraintBottom_toTopOf="@id/btnFlicker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -109,10 +103,10 @@
         android:id="@+id/btnFlicker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="48dp"
         android:text="@string/btn_flicker"
         android:backgroundTint="@color/flicker_btn"
-        android:textSize="26sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/flicker_text"
         app:layout_constraintWidth_percent="0.8"
@@ -124,13 +118,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Отступ 16dp -->
     <Space
         android:id="@+id/space4"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="12dp"
         app:layout_constraintTop_toBottomOf="@id/btnFlicker"
-        app:layout_constraintBottom_toTopOf="@id/btnAbout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -139,10 +131,10 @@
         android:id="@+id/btnAbout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="48dp"
         android:text="@string/btn_about"
         android:backgroundTint="@color/about_btn"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:textColor="@color/about_text"
         app:layout_constraintWidth_percent="0.5"
