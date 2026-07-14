@@ -30,7 +30,7 @@
     <string name="tv_hint_strobe">Frequency control slider</string>
     <string name="tv_hint_strobe_active">Adjust flash frequency with the slider</string>
     <string name="tv_hint_sos">SOS: · · · — — — · · ·</string>
-    <string name="tv_hint_sos_active">You are sending a rescue signal</string>
+    <string name="tv_hint_sos_active">SOS mode is active</string>
     <string name="tv_hint_flicker">Cosmic noise mode: random flashes</string>
     <string name="tv_status_flicker_active">Flicker: “cosmic noise” mode is active</string>
 
