@@ -41,6 +41,7 @@
     <string name="about_author">Автор: SDax</string>
     <string name="about_license">Лицензия: MIT</string>
     <string name="about_build_status">Сборка: Beta (только для тестирования)</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
 
     <!-- Ошибки и системные сообщения -->
     <string name="permission_denied_message">Требуется разрешение на использование камеры</string>

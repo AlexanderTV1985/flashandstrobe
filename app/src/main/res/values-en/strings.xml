@@ -41,6 +41,7 @@
     <string name="about_author">Author: SDax</string>
     <string name="about_license">License: MIT</string>
     <string name="about_build_status">Build: Beta (testing only)</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
     <!-- Errors and system messages -->
     <string name="permission_denied_message">Camera permission required</string>

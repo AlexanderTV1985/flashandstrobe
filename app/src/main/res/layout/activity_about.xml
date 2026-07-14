@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:background="@color/about_bg"
     android:fillViewport="true"
-    android:paddingTop="48dp">  <!-- вот это опускает всё вниз -->
+    android:paddingTop="48dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"> <!-- оставил боковые отступы отдельно, чтобы не было двойного padding -->
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/tvAppName"
@@ -67,6 +67,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about_license"
-            android:textColor="@color/about_muted"/>
+            android:textColor="@color/about_muted"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnPrivacyPolicy"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/privacy_policy"
+            android:gravity="start|center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"/>
     </LinearLayout>
 </ScrollView>
