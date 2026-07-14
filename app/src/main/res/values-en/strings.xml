@@ -17,6 +17,7 @@
     <string name="btn_flash_off">Turn Off Flashlight</string>
     <string name="btn_strobe_on">Turn On Strobe</string>
     <string name="btn_strobe_off">Turn Off Strobe</string>
+    <string name="btn_flash">Flashlight</string>
     <string name="btn_sos_on">Start SOS</string>
     <string name="btn_sos_off">Stop SOS</string>
     <string name="btn_flicker_on">Turn On Flicker</string>
@@ -24,10 +25,13 @@
 
     <!-- Statuses and hints -->
     <string name="tv_status_ready">Ready to work</string>
-    <string name="tv_hint_flash">Tap the button to turn on the flashlight</string>
+    <string name="tv_hint_flash">Tap to toggle</string>
+    <string name="tv_hint_flash_active">Tap the button to turn off the flashlight</string>
+    <string name="tv_hint_strobe">Frequency control slider</string>
+    <string name="tv_hint_strobe_active">Adjust flash frequency with the slider</string>
     <string name="tv_hint_sos">SOS: · · · — — — · · ·</string>
+    <string name="tv_hint_sos_active">You are sending a rescue signal</string>
     <string name="tv_hint_flicker">Cosmic noise mode: random flashes</string>
-    <string name="tv_hint_strobe">Adjust flash frequency with the slider</string>
     <string name="tv_status_flicker_active">Flicker: “cosmic noise” mode is active</string>
 
     <!-- About section -->
@@ -36,6 +40,7 @@
     <string name="about_warning">⚠️ Prolonged flickering may be unsafe for people prone to photosensitive epilepsy. Use with caution.</string>
     <string name="about_author">Author: SDax</string>
     <string name="about_license">License: MIT</string>
+    <string name="about_build_status">Build: Beta (testing only)</string>
 
     <!-- Errors and system messages -->
     <string name="permission_denied_message">Camera permission required</string>

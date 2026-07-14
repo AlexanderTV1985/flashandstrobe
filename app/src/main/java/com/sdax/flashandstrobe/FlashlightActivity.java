@@ -111,7 +111,7 @@ public class FlashlightActivity extends AppCompatActivity {
             updateButtonText(isFlashOn);
 
             if (isFlashOn) {
-                tvStatus.setText(getString(R.string.tv_hint_flash));
+                tvStatus.setText(getString(R.string.tv_hint_flash_active));
                 btnToggleFlash.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.flash_on))
                 );

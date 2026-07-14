@@ -126,7 +126,7 @@ public class SosActivity extends AppCompatActivity {
         updateButtonText(isSosActive);
 
         if (isSosActive) {
-            tvStatus.setText(getString(R.string.tv_hint_sos));
+            tvStatus.setText(getString(R.string.tv_hint_sos_active));
             startSosPattern();
         } else {
             stopSos();

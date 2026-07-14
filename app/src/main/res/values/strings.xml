@@ -25,10 +25,13 @@
 
     <!-- Статусы и подсказки -->
     <string name="tv_status_ready">Готов к работе</string>
-    <string name="tv_hint_flash">Нажмите кнопку, чтобы выключить фонарик</string>
+    <string name="tv_hint_flash">Нажмите для переключения</string>
+    <string name="tv_hint_flash_active">Нажмите кнопку, чтобы выключить фонарик</string>
+    <string name="tv_hint_strobe">Регулятор частоты</string>
+    <string name="tv_hint_strobe_active">Регулируйте частоту вспышек ползунком</string>
     <string name="tv_hint_sos">SOS: · · · — — — · · ·</string>
+    <string name="tv_hint_sos_active">Вы подаёте сигнал спасения</string>
     <string name="tv_hint_flicker">Режим космического шума: случайные вспышки</string>
-    <string name="tv_hint_strobe">Регулируйте частоту вспышек ползунком</string>
     <string name="tv_status_flicker_active">Мерцание: режим «космический шум» активен</string>
 
     <!-- О приложении -->

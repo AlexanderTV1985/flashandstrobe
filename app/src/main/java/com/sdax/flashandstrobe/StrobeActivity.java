@@ -26,7 +26,7 @@ public class StrobeActivity extends AppCompatActivity {
     private CameraManager cameraManager;
     private String cameraId;
     private boolean isStrobeOn = false;
-    private long flashIntervalMs = (long) (1000.0 / 3);
+    private long flashIntervalMs;
     private boolean currentTorchState = false;
 
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -43,7 +43,6 @@ public class StrobeActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "app_prefs";
     private static final String KEY_STROBE_WARNING_SHOWN = "strobe_warning_shown";
 
-    // Регистрируем callback для получения результата из WarningActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,17 +75,17 @@ public class StrobeActivity extends AppCompatActivity {
             return;
         }
 
-        // --- Логика частоты (ровный шаг 1 Гц, диапазон 3–23 Гц) ---
         seekFrequency.setMax(20);
-        seekFrequency.setProgress(0);
+        seekFrequency.setProgress(10);
 
         int initialHz = 3 + seekFrequency.getProgress();
         tvFreqValue.setText(String.format("%d Гц", initialHz));
+        flashIntervalMs = (long) (1000.0 / initialHz);
 
         seekFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int hz = 3 + progress;          // 3...23 Гц
+                int hz = 3 + progress;
                 flashIntervalMs = (long) (1000.0 / hz);
                 tvFreqValue.setText(String.format("%d Гц", hz));
             }
@@ -94,7 +93,6 @@ public class StrobeActivity extends AppCompatActivity {
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-        // --------------------------------------------------------
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
@@ -167,9 +165,6 @@ public class StrobeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Этот метод сработает, если ты используешь startActivityForResult напрямую.
-        // На Android 11/12/13/14/15/16 лучше использовать registerForActivityResult,
-        // но чтобы не менять твой стиль кода — оставляем так.
         if (requestCode == REQUEST_WARNING_DIALOG && resultCode == RESULT_OK) {
             SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             prefs.edit().putBoolean(KEY_STROBE_WARNING_SHOWN, true).apply();
@@ -185,7 +180,7 @@ public class StrobeActivity extends AppCompatActivity {
 
         if (isStrobeOn) {
             currentTorchState = false;
-            tvStatus.setText(getString(R.string.tv_hint_strobe));
+            tvStatus.setText(getString(R.string.tv_hint_strobe_active));
 
             btnToggleStrobe.setBackgroundTintList(
                     ContextCompat.getColorStateList(this, R.color.strobe_btn)
