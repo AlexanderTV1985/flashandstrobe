@@ -26,7 +26,7 @@
     <!-- Статусы и подсказки -->
     <string name="tv_status_ready">Готов к работе</string>
     <string name="tv_hint_flash">Нажмите для переключения</string>
-    <string name="tv_hint_flash_active">Нажмите кнопку, чтобы выключить фонарик</string>
+    <string name="tv_hint_flash_active"></string>
     <string name="tv_hint_strobe">Регулятор частоты</string>
     <string name="tv_hint_strobe_active">Регулируйте частоту вспышек ползунком</string>
     <string name="tv_hint_sos">SOS: · · · — — — · · ·</string>
