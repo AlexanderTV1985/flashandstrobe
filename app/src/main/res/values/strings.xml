@@ -46,4 +46,9 @@
     <!-- Ошибки и системные сообщения -->
     <string name="permission_denied_message">Требуется разрешение на использование камеры</string>
     <string name="flash_error_message">Ошибка управления вспышкой</string>
+
+    <string name="tv_timer_label">время автовыключения:</string>
+    <string name="timer_on">Таймер активирован</string>
+    <string name="timer_off">Таймер деактивирован</string>
+
 </resources>

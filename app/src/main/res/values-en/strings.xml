@@ -46,4 +46,8 @@
     <!-- Errors and system messages -->
     <string name="permission_denied_message">Camera permission required</string>
     <string name="flash_error_message">Flash control error</string>
+
+    <string name="tv_timer_label">Auto-off time:</string>
+    <string name="timer_on">Timer activated</string>
+    <string name="timer_off">Timer deactivated</string>
 </resources>

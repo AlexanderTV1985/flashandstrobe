@@ -42,4 +42,11 @@
     <color name="about_muted">@color/text_hint</color>
 
     <color name="ic_launcher_background_color">#3D6ADC</color>
+
+    <color name="timer_bg">#121212</color>
+    <color name="timer_text_color">#00B64F</color>
+
+    <color name="timer_text_color_disabled">#AAAAAA</color> <!-- Серый цвет для неактивных кнопок -->
+
+
 </resources>
